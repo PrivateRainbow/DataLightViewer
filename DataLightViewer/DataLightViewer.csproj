@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1887459D-2112-4A6D-AF19-66B1BACE209F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>DataLightViewer</RootNamespace>
+    <AssemblyName>DataLightViewer</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="AttachedProperties\BaseAttachedProperty.cs" />
+    <Compile Include="Behaviors\TreeViewItemBehavior.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Commands\RelayParameterizedCommand.cs" />
+    <Compile Include="Controls\SearchTreeViewItemBox.xaml.cs">
+      <DependentUpon>SearchTreeViewItemBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Convertors\HeaderToImageConvertor.cs" />
+    <Compile Include="Convertors\LeftMarginMultiplierConverter.cs" />
+    <Compile Include="Helpers\ConnectionStringHelper.cs" />
+    <Compile Include="Helpers\DbConnectionHelper.cs" />
+    <Compile Include="Helpers\DialogHelper.cs" />
+    <Compile Include="Helpers\ExpressionHelpers.cs" />
+    <Compile Include="Helpers\Extentions\TreeViewItemExtensions.cs" />
+    <Compile Include="Helpers\TextHelper.cs" />
+    <Compile Include="LogHelper\Logger.cs" />
+    <Compile Include="LogHelper\LogWrapper.cs" />
+    <Compile Include="Mediator\MessageContext.cs" />
+    <Compile Include="Mediator\MessageType.cs" />
+    <Compile Include="Mediator\Messenger.cs" />
+    <Compile Include="Mediator\MultiDictionary.cs" />
+    <Compile Include="Memento\NodeMemento.cs" />
+    <Compile Include="Models\Authentication.cs" />
+    <Compile Include="Models\Enums.cs" />
+    <Compile Include="Models\EventArgs\NodeEventArgs.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Services\NodeContentPresenter.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\ExplorerViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\NodeViewModels\NodePropertyViewModel.cs" />
+    <Compile Include="ViewModels\NodeViewModels\NodeSqlScriptViewModel.cs" />
+    <Compile Include="ViewModels\NodeViewModels\NodeTreeViewModel.cs" />
+    <Compile Include="ViewModels\NodeViewModels\NodeViewModel.cs" />
+    <Compile Include="ViewModels\StatusViewModel.cs" />
+    <Compile Include="Views\Main\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\ObjectExplorerWindow.xaml.cs">
+      <DependentUpon>ObjectExplorerWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Controls\SearchTreeViewItemBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Buttons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Colors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Controls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Fonts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Texts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\TreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Main\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ObjectExplorerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Resource Include="Fonts\fontawesome-webfont.ttf" />
+    <Resource Include="Fonts\Lato-Black.ttf" />
+    <Resource Include="Fonts\Lato-BlackItalic.ttf" />
+    <Resource Include="Fonts\Lato-Bold.ttf" />
+    <Resource Include="Fonts\Lato-BoldItalic.ttf" />
+    <Resource Include="Fonts\Lato-Hairline.ttf" />
+    <Resource Include="Fonts\Lato-HairlineItalic.ttf" />
+    <Resource Include="Fonts\Lato-Heavy.ttf" />
+    <Resource Include="Fonts\Lato-HeavyItalic.ttf" />
+    <Resource Include="Fonts\Lato-Italic.ttf" />
+    <Resource Include="Fonts\Lato-Light.ttf" />
+    <Resource Include="Fonts\Lato-LightItalic.ttf" />
+    <Resource Include="Fonts\Lato-Medium.ttf" />
+    <Resource Include="Fonts\Lato-MediumItalic.ttf" />
+    <Resource Include="Fonts\Lato-Regular.ttf" />
+    <Resource Include="Fonts\Lato-Semibold.ttf" />
+    <Resource Include="Fonts\Lato-SemiboldItalic.ttf" />
+    <Resource Include="Fonts\Lato-Thin.ttf" />
+    <Resource Include="Fonts\Lato-ThinItalic.ttf" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="LogHelper\Icons\database.png" />
+    <Resource Include="LogHelper\Icons\procedure.png" />
+    <Resource Include="LogHelper\Icons\table.png" />
+    <Resource Include="LogHelper\Icons\view.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Loader\Loader.csproj">
+      <Project>{265dc0c6-cc03-4e71-9607-d34fa499bbe4}</Project>
+      <Name>Loader</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="LogHelper\Icons\artificial.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="LogHelper\Icons\Menu\search.png" />
+    <Resource Include="LogHelper\Icons\Menu\connector.png" />
+    <Resource Include="LogHelper\Icons\Menu\sql.png" />
+    <Resource Include="LogHelper\Icons\Menu\update.png" />
+    <Resource Include="LogHelper\Icons\Menu\xml.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="LogHelper\Icons\Menu\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="LogHelper\Icons\Menu\new.png" />
+    <Resource Include="LogHelper\Icons\Menu\open.png" />
+    <Resource Include="LogHelper\Icons\Menu\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="LogHelper\Icons\Menu\clear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Menu\clear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Menu\connector.png" />
+    <Resource Include="Icons\Menu\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Menu\new.png" />
+    <Resource Include="Icons\Menu\open.png" />
+    <Resource Include="Icons\Menu\save.png" />
+    <Resource Include="Icons\Menu\search.png" />
+    <Resource Include="Icons\Menu\sql.png" />
+    <Resource Include="Icons\Menu\update.png" />
+    <Resource Include="Icons\Menu\xml.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\artificial.png" />
+    <Resource Include="Icons\database.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\procedure-data.png" />
+    <Resource Include="Icons\table-data.png" />
+    <Resource Include="Icons\view-data.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\key.png" />
+    <Resource Include="Icons\primary-key.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

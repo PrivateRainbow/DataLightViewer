@@ -1,0 +1,180 @@
+﻿<Window x:Class="DataLightViewer.Views.Main.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:DataLightViewer.Controls"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="DataLightViewer" Height="450" Width="650"
+        >
+
+    <!--#region Window Content -->
+
+    <Grid Background="{StaticResource BackgroundHeaderBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.4*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="0.6*"/>
+        </Grid.ColumnDefinitions>
+
+        <!--#region Menu-->
+
+        <Grid Grid.Row="0" 
+              Grid.Column="0" 
+              Grid.ColumnSpan="3"
+              >
+            <Menu Background="{StaticResource ForegroundGreyBrush}">                
+                <MenuItem Header="File">                    
+                    <MenuItem Header="New">
+                        <MenuItem Header="Project"
+                                  Command="{Binding CreateProjectCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Icons/Menu/new.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>                        
+                    </MenuItem>                    
+                    <MenuItem Header="Open">
+                        <MenuItem Header="Project"
+                                  Command="{Binding OpenProjectCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Icons/Menu/open.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="Save"
+                              Command="{Binding SaveProjectCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Menu/save.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Save As ..."
+                              Command="{Binding SaveProjectAsCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Menu/save.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>                
+            </Menu>
+        </Grid>
+
+        <!--#endregion-->
+
+        <!--#region Search TreeViewItem Control -->
+
+        <controls:SearchTreeViewItemControl 
+            Grid.Column="0" 
+            Grid.Row="1" 
+            Grid.RowSpan="2"
+            Height="Auto"
+            Width="Auto"
+            DataContext="{Binding NodeTreeViewModel, Mode=TwoWay}"
+            />
+
+        <!--#endregion -->
+
+        <!--#region Vertical Splitter -->
+
+        <GridSplitter Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Width="5"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Center"
+                      Background="Transparent"/>
+
+        <!--#endregion -->
+
+        <!--#region Property and Sql Editor -->
+
+        <Grid Grid.Row="1" 
+              Grid.RowSpan="2" 
+              Grid.Column="2">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.4*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="0.6*"/>
+            </Grid.RowDefinitions>
+
+            <DataGrid Grid.Row="0"
+                      Margin="0 5 5 0"
+                      IsReadOnly="True"
+                      Style="{StaticResource DbPropertiesDataGrid}"
+                      ItemsSource="{Binding PropertyViewModel.Properties}"/>
+                
+            <GridSplitter Grid.Row="1"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center"
+                          Height="5"
+                          Background="Transparent">
+            </GridSplitter>
+
+            <Grid Grid.Row="2"
+                  Background="White"
+                  Margin="0 0 5 5">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Expander Grid.Row="0" Header="Sql-Editor"
+                          Background="{StaticResource ForegroundGreyBrush}">
+                    <ToolBar
+                        Background="Transparent"                        
+                        >
+                        <!-- Clear btn -->
+                        <Button Command="{Binding SqlScriptViewModel.ClearScriptCommand}">
+                            <StackPanel>
+                                <Image Source="/Icons/Menu/clear.png"/>
+                                <TextBlock Text="Clear"/>
+                            </StackPanel>
+                        </Button>
+                        <Separator/>
+                        <!-- Save btn -->
+                        <Button  Command="{Binding SqlScriptViewModel.SaveScriptCommand}">
+                            <StackPanel>
+                                <Image Source="/Icons/Menu/sql.png"/>
+                                <TextBlock Text="Save"/>
+                            </StackPanel>
+                        </Button>
+                    </ToolBar>
+                </Expander>
+                <TextBox
+                    Grid.Row="1"
+                    IsManipulationEnabled="True"                    
+                    Style="{StaticResource SqlEditorTextBox}"
+                    Text="{Binding SqlScriptViewModel.Script}"/>
+
+            </Grid>
+        </Grid>
+
+        <!--#endregion-->
+
+        <!--#region Status -->
+
+        <StatusBar Grid.Row="3" 
+                   Grid.Column="0" 
+                   Grid.ColumnSpan="3"
+                   Background="{StaticResource BackgroundStaturBarDarkBrush}">
+            <StatusBarItem>
+                <TextBlock Text="{Binding StatusViewModel.Status}"                           
+                       Foreground="{StaticResource ForegroundWhiteBrush}"
+                       FontFamily="{StaticResource LatoThin}"
+                       FontSize="{StaticResource FontSizeRegular}"
+                       Padding="2"                       
+                       Width="Auto"/>
+            </StatusBarItem>
+        </StatusBar>
+
+        <!--#endregion-->
+
+    </Grid>
+
+    <!--#endregion-->
+</Window>

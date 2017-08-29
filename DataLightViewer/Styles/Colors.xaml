@@ -1,0 +1,34 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- #434245 -->
+    <Color x:Key="ForegroundGreyDark">#3A4047</Color>
+    <SolidColorBrush x:Key="ForegroundGreyDarkBrush" Color="{StaticResource ForegroundGreyDark}"/>
+    
+    <Color x:Key="BackgroundStaturBarDark">#4B6EAF</Color>
+    <SolidColorBrush x:Key="BackgroundStaturBarDarkBrush" Color="{StaticResource BackgroundStaturBarDark}"/>
+    
+    <!-- Expand toggle btn-->
+    <Color x:Key="GlyphColor">#FF444444</Color>
+    
+    <!-- Tree -->
+    <Color x:Key="BackgroundControlColor">#666666</Color>
+    <SolidColorBrush x:Key="BackgroundControlBrush" Color="{StaticResource BackgroundControlColor}"/>
+
+    <!-- Selected -->
+    <Color x:Key="BackgroundHighlightColor">#433C45</Color>
+    <SolidColorBrush x:Key="BackgroundHighlightBrush" Color="{StaticResource BackgroundHighlightColor}"/>
+
+    <!-- Header -->
+    <Color x:Key="BackgroundHeaderColor">#5F5562</Color>
+    <SolidColorBrush x:Key="BackgroundHeaderBrush" Color="{StaticResource BackgroundHeaderColor}"/>
+    
+    <!-- Foreground White -->
+    <Color x:Key="ForegroundWhiteColor">#FFFFFF</Color>
+    <SolidColorBrush x:Key="ForegroundWhiteBrush" Color="{StaticResource ForegroundWhiteColor}"/>
+
+    <!-- Foreground Light Grey -->
+    <Color x:Key="ForegroundGreyColor">#A5A2A6</Color>
+    <SolidColorBrush x:Key="ForegroundGreyBrush" Color="{StaticResource ForegroundGreyColor}"/>
+
+</ResourceDictionary>

@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loader", "Loader\Loader.csproj", "{265DC0C6-CC03-4E71-9607-D34FA499BBE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLightViewer", "DataLightViewer\DataLightViewer.csproj", "{1887459D-2112-4A6D-AF19-66B1BACE209F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{265DC0C6-CC03-4E71-9607-D34FA499BBE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{265DC0C6-CC03-4E71-9607-D34FA499BBE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{265DC0C6-CC03-4E71-9607-D34FA499BBE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{265DC0C6-CC03-4E71-9607-D34FA499BBE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1887459D-2112-4A6D-AF19-66B1BACE209F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1887459D-2112-4A6D-AF19-66B1BACE209F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1887459D-2112-4A6D-AF19-66B1BACE209F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1887459D-2112-4A6D-AF19-66B1BACE209F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
