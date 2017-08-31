@@ -17,10 +17,6 @@ namespace DataLightViewer.ViewModels
         #region Private Members
 
         private readonly Window _objectExplorerWindow;
-
-        /// <summary>
-        /// Ability to cancel connection to destination server
-        /// </summary>
         private CancellationTokenSource _cancelServerConnectionTokenSource;
 
         #endregion
@@ -108,7 +104,13 @@ namespace DataLightViewer.ViewModels
             get => _selectedAuthentication;
             set
             {
+                if (ReferenceEquals(_selectedAuthentication, value))
+                    return;
+
                 _selectedAuthentication = value;
+
+                AuthorizedWithCredentials = _selectedAuthentication.Type == AuthenticationType.SqlServer ? true : false;
+
                 OnPropertyChanged(nameof(SelectedAuthentication));
             }
         }
@@ -172,11 +174,12 @@ namespace DataLightViewer.ViewModels
 
             try
             {
+                IsConnectionStarted = true;
                 if (await connectionTester.VerifyConnectionAsync(token))
                 {
                     App.ServerConnectionString = serverConnection;
 
-                    Messenger.Instance.Notify(MessageType.ConnectionEstablished, true);
+                    Messenger.Instance.NotifyColleagues(MessageType.ConnectionEstablished);
 
                     LogWrapper.WriteInfo($"{nameof(ConnectToServerAsync)} : connection is established!");
                     _objectExplorerWindow.Close();
@@ -189,9 +192,10 @@ namespace DataLightViewer.ViewModels
                 MessageBox.Show("Server is not responding.", "Error");
             }
         }
+
         private void CancelConnectionToServer()
         {
-            if (_isConnectionStarted)
+            if (IsConnectionStarted)
                 _cancelServerConnectionTokenSource.Cancel();
             else
                 _objectExplorerWindow.Close();

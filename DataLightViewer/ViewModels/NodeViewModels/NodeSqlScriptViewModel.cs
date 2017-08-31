@@ -25,17 +25,13 @@ namespace DataLightViewer.ViewModels
 
         public NodeSqlScriptViewModel()
         {
-            Messenger.Instance.Subscribe(MessageType.SqlPreparation, UpdateScript);
+            Messenger.Instance.Register<string>(MessageType.SqlPreparation, UpdateScript);
 
             SaveScriptCommand = new RelayCommand(() => WriteScriptAsync());
             ClearScriptCommand = new RelayCommand(() => CleanContent());
         }
 
-        private void UpdateScript(object source)
-        {
-            var content = source as string;
-            Script = content.TrimStart(Environment.NewLine.ToCharArray());
-        }
+        private void UpdateScript(string source) => Script = source.TrimStart(Environment.NewLine.ToCharArray());
 
         private void CleanContent() => Script = string.Empty;
 

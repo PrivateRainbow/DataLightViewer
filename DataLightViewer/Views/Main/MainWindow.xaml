@@ -11,7 +11,7 @@
 
     <!--#region Window Content -->
 
-    <Grid Background="{StaticResource BackgroundHeaderBrush}">
+    <Grid Background="{StaticResource BackgroundBlueBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -31,7 +31,7 @@
               Grid.Column="0" 
               Grid.ColumnSpan="3"
               >
-            <Menu Background="{StaticResource ForegroundGreyBrush}">                
+            <Menu Background="{StaticResource ForegroundWhiteBrush}">                
                 <MenuItem Header="File">                    
                     <MenuItem Header="New">
                         <MenuItem Header="Project"
@@ -124,7 +124,7 @@
                 </Grid.RowDefinitions>
 
                 <Expander Grid.Row="0" Header="Sql-Editor"
-                          Background="{StaticResource ForegroundGreyBrush}">
+                          Background="{StaticResource BackgroundBlueBrush}">
                     <ToolBar
                         Background="Transparent"                        
                         >
@@ -161,7 +161,7 @@
         <StatusBar Grid.Row="3" 
                    Grid.Column="0" 
                    Grid.ColumnSpan="3"
-                   Background="{StaticResource BackgroundStaturBarDarkBrush}">
+                   Background="{StaticResource BackgroundStatusBarOrangeBrush}">
             <StatusBarItem>
                 <TextBlock Text="{Binding StatusViewModel.Status}"                           
                        Foreground="{StaticResource ForegroundWhiteBrush}"

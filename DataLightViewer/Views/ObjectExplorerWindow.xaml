@@ -14,7 +14,7 @@
                    FontSize="{StaticResource FontSizeXXLarge}"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
-                   Text="SERVER CONNECTOR">
+                   Text="SQL Server">
         </TextBlock>
         
         <ComboBox HorizontalAlignment="Stretch" 
@@ -27,15 +27,6 @@
                           ItemsSource="{Binding Servers}"
                           Text="{Binding SelectedServerConnection, Mode=TwoWay}">
             <ComboBoxItem>.\SQLEXPRESS</ComboBoxItem>
-
-            <ComboBox.Style>
-                <Style TargetType="ComboBox">
-                    <Setter Property="BorderBrush" Value="{StaticResource ForegroundGreyDarkBrush}"/>
-                    <Setter Property="BorderThickness" Value="1"/>
-                    <Setter Property="FontFamily" Value="{StaticResource LatoThin}"/>
-                    <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}"/>
-                </Style>
-            </ComboBox.Style>
         </ComboBox>
 
         <ComboBox HorizontalAlignment="Stretch" Height="25" Margin="5"
@@ -43,22 +34,18 @@
                           DisplayMemberPath="Description"
                           SelectedValuePath ="Type"
                           SelectedItem ="{Binding SelectedAuthentication}">
-            <ComboBox.Style>
-                <Style TargetType="ComboBox">
-                    <Setter Property="BorderBrush" Value="{StaticResource ForegroundGreyDarkBrush}"/>
-                    <Setter Property="BorderThickness" Value="1"/>
-                    <Setter Property="FontFamily" Value="{StaticResource LatoThin}"/>
-                    <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}"/>
-                </Style>
-            </ComboBox.Style>
         </ComboBox>
 
-        <TextBox Style="{StaticResource LoginTextBoxWithPlaceholder}"
+        <TextBox Text="{Binding User.Id, UpdateSourceTrigger=PropertyChanged}" 
+                 Style="{StaticResource LoginTextBoxWithPlaceholder}"
                  Template="{StaticResource PlaceholderTextBoxTemplate}"
+                 IsEnabled="{Binding AuthorizedWithCredentials}"
                  Tag="User"/>
 
-        <PasswordBox Style="{StaticResource LoginPasswordBoxWithPlaceholder}"
-                     Template="{StaticResource PlaceholderPasswordBoxTemplate}"                   
+        <PasswordBox 
+                     Style="{StaticResource LoginPasswordBoxWithPlaceholder}"
+                     Template="{StaticResource PlaceholderPasswordBoxTemplate}"
+                     IsEnabled="{Binding AuthorizedWithCredentials}"                     
                      Tag="Password"/>
 
         <StackPanel Orientation="Horizontal" Margin="5">

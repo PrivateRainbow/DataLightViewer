@@ -51,33 +51,28 @@ namespace DataLightViewer.ViewModels
         #endregion
 
         #region Init
+        public NodeTreeViewModel(NodeViewModel rootViewModel)
+        {
+            _rootNode = rootViewModel;
+            Items = new ObservableCollection<NodeViewModel>(new List<NodeViewModel> { _rootNode });
+        }
 
-        public NodeTreeViewModel(Node node) : this(node, lazyLoadChildren: true) {}
+        public NodeTreeViewModel(Node node) : this(node, lazyLoadChildren: true) { }
 
         public NodeTreeViewModel(Node node, bool lazyLoadChildren)
         {
-            Messenger.Instance.Subscribe(MessageType.FileProjectOpened, SetViewModelMemento);
-            Messenger.Instance.Subscribe(MessageType.SaveProjectFile, CreateViewModelMemento);
-
             _rootNode = new NodeViewModel(node, parent: null, lazyLoadChildren: lazyLoadChildren);
-
             Items = new ObservableCollection<NodeViewModel>(new List<NodeViewModel> { _rootNode });
 
             SearchCommand = new SearchNodeTreeCommand(this);
+
+            Messenger.Instance.Register<MainWindowViewModel>(MessageType.OnSavingProjectFile, wvm => InitializeMemento(wvm));
         }
 
-        private void CreateViewModelMemento(object sender)
+        private void InitializeMemento(MainWindowViewModel sender)
         {
-            if (sender is AppStateService)
-                AppStateService.Initialize(new NodeMemento(_items.First()));
-            else
-                throw new ArgumentException($"Such {sender} was not expected!");
-        }
-
-        private void SetViewModelMemento(object data)
-        {
-            if (data is NodeViewModel vm)
-                Items = new ObservableCollection<NodeViewModel>(new List<NodeViewModel> { _rootNode });
+            var memento = new NodeMemento(_items.First());
+            Messenger.Instance.NotifyColleagues(MessageType.MementoInitialized, memento);
         }
 
         #endregion

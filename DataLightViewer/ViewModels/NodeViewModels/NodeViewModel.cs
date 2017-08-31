@@ -24,16 +24,18 @@ namespace DataLightViewer.ViewModels
         #region Private members
 
         private static readonly NodeViewModel ArtificialChild = new NodeViewModel() { Name = "DummyChild" };
+        public static NodeViewModel ArtificialChildNode => ArtificialChild;
 
         private static readonly BaseDbNodeBuilder DbNodeBuilder;
         private static readonly SqlNodeBuilder SqlNodeBuilder;
 
-        private string _name;
-        private readonly Node _node;
-        private readonly bool _isExpandable;
 
-        private ObservableCollection<NodeViewModel> _children;
+        private Node _node;
         private NodeViewModel _selectedItem;
+        private ObservableCollection<NodeViewModel> _children;
+
+        private string _name;
+        private bool _isExpandable;
         private bool _isExpanded;
         private bool _isSelected;
 
@@ -54,6 +56,7 @@ namespace DataLightViewer.ViewModels
         public string Content { get; }
         public NodeViewModel Parent { get; }
         public DbSchemaObjectType Type { get; }
+        public Node InnerNode => _node;
         public ObservableCollection<NodeViewModel> Children
         {
             get { return _children; }
@@ -75,7 +78,7 @@ namespace DataLightViewer.ViewModels
                     _selectedItem = this;
 
                     OnPropertyChanged(nameof(IsSelected));
-                    Messenger.Instance.Notify(MessageType.NodeSelection, _selectedItem._node);
+                    Messenger.Instance.NotifyColleagues(MessageType.NodeSelection, _selectedItem._node);
                 }
             }
         }
@@ -100,9 +103,11 @@ namespace DataLightViewer.ViewModels
 
             }
         }
+        public bool IsExpandable => _isExpandable;
 
         public bool HasArtificialChild => Children.Count == 1 && Children[0] == ArtificialChild;
         public bool ChildrenDownloaded => Children.Count > 0 && !Children.Contains(ArtificialChild);
+
 
         #endregion
 
@@ -135,6 +140,7 @@ namespace DataLightViewer.ViewModels
         /// </summary>
         public NodeViewModel(Node node) : this(node, null, true) { }
 
+
         /// <summary>
         /// Such ctor is used for expanding nodes in lazy style 
         /// by setting artifical node as a child for current node
@@ -160,7 +166,7 @@ namespace DataLightViewer.ViewModels
             }
 
             BuildSqlCommand = new RelayCommand(async () => await BuildSqlAsync());
-            RefreshCommand = new RelayCommand(Refresh, predicate => _isExpandable);
+            RefreshCommand = new RelayCommand(Refresh);
         }
 
         #endregion
@@ -181,7 +187,6 @@ namespace DataLightViewer.ViewModels
             };
 
             LogWrapper.WriteInfo($"Loading data for {_selectedItem._node.Name}", "Loading ...");
-
             Task.Run(() => DbNodeBuilder.MakeNode(context)).ContinueWith(pr => InitializeChildren(pr.Result));
         }
 
@@ -190,6 +195,7 @@ namespace DataLightViewer.ViewModels
             var message = $"Building sql-script for {_selectedItem._node.Name}";
 
             LogWrapper.WriteInfo(message, message);
+
             return Task.Run(() => SqlNodeBuilder.BuildScript(_selectedItem._node))
                 .ContinueWith(pr =>
                 {
@@ -237,7 +243,7 @@ namespace DataLightViewer.ViewModels
 
         private void SendSqlScript(string script)
         {
-            Messenger.Instance.Notify(MessageType.SqlPreparation, script);
+            Messenger.Instance.NotifyColleagues(MessageType.SqlPreparation, script);
 
             var message = $"Sql-script for {_selectedItem._node.Name} was succesfully constructed!";
             LogWrapper.WriteInfo(message);
@@ -253,11 +259,11 @@ namespace DataLightViewer.ViewModels
 
         public void SetArtificalNode()
         {
+            Children = new ObservableCollection<NodeViewModel>();
+
             if (_isExpandable)
                 Children.Add(ArtificialChild);
         }
-
-        public Node InnerNode() => _node;
 
         #endregion
 

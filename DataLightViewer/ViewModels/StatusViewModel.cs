@@ -19,14 +19,10 @@ namespace DataLightViewer.ViewModels
 
         public StatusViewModel()
         {
-            Messenger.Instance.Subscribe(MessageType.ExecutionStatus, UpdateStatus);
+            Messenger.Instance.Register<string>(MessageType.ExecutionStatus, UpdateStatus);
             Status = DefaultMessage;
         }
 
-        private void UpdateStatus(object source)
-        {
-            var data = source as string;
-            Status = data ?? DefaultMessage;
-        }
+        private void UpdateStatus(string source) => Status = source ?? DefaultMessage;
     }
 }

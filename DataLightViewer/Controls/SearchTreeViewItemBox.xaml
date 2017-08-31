@@ -60,8 +60,7 @@
 
             <!-- Tree -->
             <TreeView Grid.Row="1"
-                  ItemsSource="{Binding Items}"
-                      Background="LightGray">
+                  ItemsSource="{Binding Items}">
 
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate

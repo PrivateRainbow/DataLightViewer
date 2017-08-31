@@ -23,13 +23,10 @@ namespace DataLightViewer.ViewModels
 
         public NodePropertyViewModel()
         {
-            Messenger.Instance.Subscribe(MessageType.NodeSelection, UpdateProperties);
+            Messenger.Instance.Register<Node>(MessageType.NodeSelection, UpdateProperties);
         }
+      
+        private void UpdateProperties(Node node) => Properties = node?.Attributes;
 
-        private void UpdateProperties(object source)
-        {
-            var node = source as Node;
-            Properties = node?.Attributes;
-        }
     }
 }
