@@ -7,6 +7,8 @@ using System.Linq;
 using System.Windows;
 using DataLightViewer.Memento;
 using DataLightViewer.Mediator;
+using Loader.Types;
+using DataLightViewer.Helpers;
 
 namespace DataLightViewer.ViewModels
 {
@@ -14,7 +16,7 @@ namespace DataLightViewer.ViewModels
     {
         #region Data
 
-        private readonly NodeViewModel _rootNode;
+        private NodeViewModel _rootNode;
         private IEnumerator<NodeViewModel> _filteredNodeEnumerator;
 
         #endregion
@@ -51,22 +53,20 @@ namespace DataLightViewer.ViewModels
         #endregion
 
         #region Init
-        public NodeTreeViewModel(NodeViewModel rootViewModel)
+
+        public NodeTreeViewModel()
         {
-            _rootNode = rootViewModel;
-            Items = new ObservableCollection<NodeViewModel>(new List<NodeViewModel> { _rootNode });
+            Messenger.Instance.Register<NodeMemento>(MessageType.OnOpeningProjectFile, nm => InitializeFromProjectFile(nm));
+            Messenger.Instance.Register<MainWindowViewModel>(MessageType.OnSavingProjectFile, wvm => InitializeMemento(wvm));
+            Messenger.Instance.Register(MessageType.ConnectionEstablished, InitializeFromServerConnection);
         }
 
-        public NodeTreeViewModel(Node node) : this(node, lazyLoadChildren: true) { }
-
-        public NodeTreeViewModel(Node node, bool lazyLoadChildren)
+        private NodeTreeViewModel(Node node, bool lazyLoadChildren)
         {
             _rootNode = new NodeViewModel(node, parent: null, lazyLoadChildren: lazyLoadChildren);
             Items = new ObservableCollection<NodeViewModel>(new List<NodeViewModel> { _rootNode });
 
-            SearchCommand = new SearchNodeTreeCommand(this);
-
-            Messenger.Instance.Register<MainWindowViewModel>(MessageType.OnSavingProjectFile, wvm => InitializeMemento(wvm));
+            SearchCommand = new SearchNodeTreeCommand(this);          
         }
 
         private void InitializeMemento(MainWindowViewModel sender)
@@ -74,6 +74,25 @@ namespace DataLightViewer.ViewModels
             var memento = new NodeMemento(_items.First());
             Messenger.Instance.NotifyColleagues(MessageType.MementoInitialized, memento);
         }
+
+        #region Subscription
+
+        private void InitializeFromServerConnection()
+        {
+            var serverNode = new Node(DbSchemaConstants.Server);
+            serverNode.AttachAttribute(new KeyValuePair<string, string>(SqlQueryConstants.Name, App.ServerConnectionString.GetServerName()));
+
+            _rootNode = new NodeViewModel(serverNode, parent: null, lazyLoadChildren: true);
+            Items = new ObservableCollection<NodeViewModel>(new List<NodeViewModel> { _rootNode });
+        }
+
+        private void InitializeFromProjectFile(NodeMemento memento)
+        {
+            _rootNode = memento.NodeViewModel;
+            Items = new ObservableCollection<NodeViewModel>(new List<NodeViewModel> { _rootNode });
+        }
+
+        #endregion
 
         #endregion
 

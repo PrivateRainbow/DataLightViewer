@@ -23,6 +23,7 @@ namespace DataLightViewer.ViewModels
 
         public NodePropertyViewModel PropertyViewModel { get; }
         public NodeSqlScriptViewModel SqlScriptViewModel { get; }
+        public NodeTreeViewModel NodeTreeViewModel { get; }
         public StatusViewModel StatusViewModel { get; }
 
         #endregion
@@ -44,6 +45,8 @@ namespace DataLightViewer.ViewModels
             PropertyViewModel = new NodePropertyViewModel();
             SqlScriptViewModel = new NodeSqlScriptViewModel();
             StatusViewModel = new StatusViewModel();
+
+            NodeTreeViewModel = new NodeTreeViewModel();
 
             OpenProjectCommand = new RelayCommand(() => OpenProject());
             CreateProjectCommand = new RelayCommand(() => CreateProject());

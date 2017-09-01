@@ -7,14 +7,20 @@
         mc:Ignorable="d"
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterScreen"
-        Height="297" Width="350">
+        Height="280" Width="350">
 
     <StackPanel Margin="10">
-        <TextBlock FontFamily="{StaticResource LatoBold}"
-                   FontSize="{StaticResource FontSizeXXLarge}"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Text="SQL Server">
+        
+        <TextBlock Text="Server Connector">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="FontFamily" Value="{StaticResource LatoBold}"/>
+                    <Setter Property="FontSize" Value="{StaticResource FontSizeXLarge}"/>
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Foreground" Value="{StaticResource BackgroundBlueBrush}"/>
+                </Style>
+            </TextBlock.Style>
         </TextBlock>
         
         <ComboBox HorizontalAlignment="Stretch" 
@@ -26,7 +32,7 @@
                           StaysOpenOnEdit="True"
                           ItemsSource="{Binding Servers}"
                           Text="{Binding SelectedServerConnection, Mode=TwoWay}">
-            <ComboBoxItem>.\SQLEXPRESS</ComboBoxItem>
+            <ComboBoxItem IsSelected="True">.\SQLEXPRESS</ComboBoxItem>
         </ComboBox>
 
         <ComboBox HorizontalAlignment="Stretch" Height="25" Margin="5"
@@ -36,7 +42,7 @@
                           SelectedItem ="{Binding SelectedAuthentication}">
         </ComboBox>
 
-        <TextBox Text="{Binding User.Id, UpdateSourceTrigger=PropertyChanged}" 
+        <TextBox Text="{Binding Source=User, Path=Id, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
                  Style="{StaticResource LoginTextBoxWithPlaceholder}"
                  Template="{StaticResource PlaceholderTextBoxTemplate}"
                  IsEnabled="{Binding AuthorizedWithCredentials}"
@@ -48,18 +54,28 @@
                      IsEnabled="{Binding AuthorizedWithCredentials}"                     
                      Tag="Password"/>
 
-        <StackPanel Orientation="Horizontal" Margin="5">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+
             <Button
-                Width="130" Height="30"
+                    Margin="10"
+                    Grid.Column ="0" Height="40"
                     IsEnabled="{Binding IsServerConnectionEntered}"
-                    Command="{Binding ConnectCommand}" 
+                    Command="{Binding ConnectCommand}"
+                    Style="{StaticResource LoginButton}"   
                     Content="Go">
             </Button>
             <Button
-                Width="130" Height="30" Margin="50 0"
+                    Margin="10"
+                    Grid.Column ="1"
+                    Height="40" 
+                    Style="{StaticResource LoginButton}"               
                     Command="{Binding CancelCommand}">Cancel</Button>
-
-        </StackPanel>
+            
+        </Grid>
     </StackPanel>
 
 </Window>

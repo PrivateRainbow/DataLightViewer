@@ -69,13 +69,15 @@
 
         <!--#region Search TreeViewItem Control -->
 
-        <controls:SearchTreeViewItemControl 
+        <controls:SearchTreeViewItemBox
             Grid.Column="0" 
             Grid.Row="1" 
             Grid.RowSpan="2"
             Height="Auto"
             Width="Auto"
-            DataContext="{Binding NodeTreeViewModel, Mode=TwoWay}"
+            Background="Transparent"
+            TreeViewItemsSource="{Binding NodeTreeViewModel.Items, Mode=TwoWay}"
+            SearchText="{Binding NodeTreeViewModel.SearchText, Mode=TwoWay}"
             />
 
         <!--#endregion -->

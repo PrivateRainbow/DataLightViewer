@@ -26,14 +26,25 @@ namespace DataLightViewer.ViewModels
         /// <summary>
         /// Credentials for connection
         /// </summary>
-        private User _user;
-        public User User
+        private string _userId;
+        public string UserId
         {
-            get => _user;
+            get => _userId;
             set
             {
-                _user = value;
-                OnPropertyChanged(nameof(User));
+                _userId = value;
+                OnPropertyChanged(nameof(UserId));
+            }
+        }
+
+        private string _userPassword;
+        public string UserPassword
+        {
+            get => _userPassword;
+            set
+            {
+                _userPassword = value;
+                OnPropertyChanged(nameof(UserPassword));
             }
         }
 
@@ -184,7 +195,8 @@ namespace DataLightViewer.ViewModels
                     LogWrapper.WriteInfo($"{nameof(ConnectToServerAsync)} : connection is established!");
                     _objectExplorerWindow.Close();
                 }
-
+                else
+                    IsConnectionStarted = false;
             }
             catch (SqlException ex)
             {
@@ -215,8 +227,8 @@ namespace DataLightViewer.ViewModels
                     break;
 
                 case AuthenticationType.SqlServer:
-                    builder.UserID = _user.Id;
-                    builder.Password = _user.Password;
+                    builder.UserID = UserId;
+                    builder.Password = UserPassword;
                     break;
             }
 

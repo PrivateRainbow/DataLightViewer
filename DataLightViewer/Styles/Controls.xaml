@@ -1,7 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:bhvr="clr-namespace:DataLightViewer.Behaviors">
-
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 
     <Style x:Key="DbPropertiesDataGrid" TargetType="{x:Type DataGrid}">

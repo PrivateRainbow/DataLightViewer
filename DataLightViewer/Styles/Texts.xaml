@@ -1,6 +1,15 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:attached="clr-namespace:DataLightViewer.AttachedProperties"
+                    xmlns:cvtors="clr-namespace:DataLightViewer.Convertors">
+    
+    
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Colors.xaml"/>
+        <ResourceDictionary Source="Fonts.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+    <BooleanToVisibilityConverter x:Key="BoolToVis" />
 
     <Style x:Key="BaseControlStyle" TargetType="{x:Type Control}">
         <Setter Property="Background" Value="White"/>
@@ -10,7 +19,6 @@
     </Style>
 
     <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource BaseControlStyle}"/>
-
 
     <Style x:Key="BaseTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource BaseControlStyle}">
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -39,12 +47,11 @@
         <Setter Property="Margin" Value="5" />
 
         <Setter Property="BorderBrush" Value="{StaticResource BackgroundBlueBrush}" />
-        <Setter Property="BorderThickness" Value="0 0 0 2" />
+        <Setter Property="BorderThickness" Value="2" />
 
         <Setter Property="Background" Value="{StaticResource ForegroundWhiteBrush}" />
 
     </Style>
-    
     <Style x:Key="LoginPasswordBoxWithPlaceholder" TargetType="{x:Type PasswordBox}">
 
         <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
@@ -54,9 +61,11 @@
         <Setter Property="Margin" Value="5" />
         
         <Setter Property="BorderBrush" Value="{StaticResource BackgroundBlueBrush}" />
-        <Setter Property="BorderThickness" Value="0 0 0 2" />
+        <Setter Property="BorderThickness" Value="2" />
 
         <Setter Property="Background" Value="{StaticResource ForegroundWhiteBrush}" />
+        <Setter Property="attached:MonitorPasswordProperty.Value" Value="True" />
+        
 
     </Style>
 
@@ -121,7 +130,8 @@
                                    x:Name="placeholder"
                                    FontFamily="{StaticResource LatoThin}"
                                    FontSize="{TemplateBinding FontSize}"
-                                   Padding="{TemplateBinding Padding}"                                  
+                                   Padding="{TemplateBinding Padding}"     
+                                   Visibility="{TemplateBinding attached:HasTextProperty.Value, Converter={cvtors:InvertedBooleanToVisiblityConverter}}"                      
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                                    />

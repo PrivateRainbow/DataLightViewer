@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace DataLightViewer.AttachedProperties
+namespace DataLightViewer
 {
     public abstract class BaseAttachedProperty<Parent, Property>
         where Parent : new()
