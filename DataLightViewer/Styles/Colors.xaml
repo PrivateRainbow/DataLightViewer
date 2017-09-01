@@ -1,12 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- #434245 -->
-    <Color x:Key="ForegroundGreyDark">#3A4047</Color>
-    <SolidColorBrush x:Key="ForegroundGreyDarkBrush" Color="{StaticResource ForegroundGreyDark}"/>
+
+    <Color x:Key="BackgroundBlue">#007ACC</Color>
+    <SolidColorBrush x:Key="BackgroundBlueBrush" Color="{StaticResource BackgroundBlue}"/>
+
+    <Color x:Key="BackgroundStatusBarOrange">#FF8C00</Color>
+    <SolidColorBrush x:Key="BackgroundStatusBarOrangeBrush" Color="{StaticResource BackgroundStatusBarOrange}"/>
     
-    <Color x:Key="BackgroundStaturBarDark">#4B6EAF</Color>
-    <SolidColorBrush x:Key="BackgroundStaturBarDarkBrush" Color="{StaticResource BackgroundStaturBarDark}"/>
     
     <!-- Expand toggle btn-->
     <Color x:Key="GlyphColor">#FF444444</Color>

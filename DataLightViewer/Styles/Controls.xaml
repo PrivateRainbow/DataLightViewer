@@ -7,7 +7,6 @@
     <Style x:Key="DbPropertiesDataGrid" TargetType="{x:Type DataGrid}">
         <Setter Property="FontFamily" Value="{StaticResource LatoThin}"/>
         <Setter Property="FontSize" Value="{StaticResource FontSizeLarge}"/>
-        <Setter Property="Foreground" Value="{StaticResource ForegroundGreyDarkBrush}"/>
         <Setter Property="Background" Value="White"/>
     </Style>
 
@@ -16,39 +15,10 @@
         <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}"/>
     </Style>
 
-
-    <Style TargetType="{x:Type Menu}">
-        <Setter Property="Background" Value="{StaticResource BackgroundHeaderBrush}"/>
-        <Setter Property="BorderBrush">
-            <Setter.Value>
-                <SolidColorBrush Color="{StaticResource ForegroundGreyColor}"/>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="BorderThickness" Value="0.6"/>
-    </Style>
-    
-    <Style TargetType="{x:Type ContextMenu}">
-        <Setter Property="Background" Value="{StaticResource BackgroundHeaderBrush}"/>
-        <Setter Property="BorderBrush">
-            <Setter.Value>
-                <SolidColorBrush Color="{StaticResource ForegroundGreyColor}"/>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="BorderThickness" Value="0.6"/>
-    </Style>
-    
     <Style TargetType="{x:Type MenuItem}">
-        <Setter Property="Background" Value="{StaticResource ForegroundGreyBrush}"/>
         <Setter Property="FontFamily" Value="{StaticResource LatoThin}"/>
         <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}"/>
         <Setter Property="FontWeight" Value="Normal"/>
-
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="{StaticResource ForegroundGreyDarkBrush}"/>
-                <Setter Property="FontWeight" Value="ExtraBold"/>
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>

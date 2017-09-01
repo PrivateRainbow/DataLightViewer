@@ -10,7 +10,6 @@
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
 
         <Setter Property="Background" Value="White"/>
-
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TreeView}">
@@ -31,10 +30,12 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        
     </Style>
 
     <Style x:Key="ExpandCollapseToggleStyle" TargetType="{x:Type ToggleButton}">
-        
+
+        <Setter Property="Foreground" Value="NavajoWhite"/>
         <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
@@ -100,9 +101,8 @@
     </Style>
 
     <Style x:Key="{x:Type TreeViewItem}" TargetType="{x:Type TreeViewItem}">
-        
+
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundGreyDarkBrush}"/>
 
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -218,7 +218,7 @@
 
                             <Setter TargetName="Bd" 
                                     Property="Panel.Background"
-                                    Value="{StaticResource ForegroundGreyBrush}"/>
+                                    Value="{StaticResource BackgroundBlueBrush}"/>
 
                             <Setter TargetName="Bd"
                                     Property="TextElement.Foreground"

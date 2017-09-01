@@ -4,11 +4,13 @@
 
     <Style x:Key="BaseControlStyle" TargetType="{x:Type Control}">
         <Setter Property="Background" Value="White"/>
-        <Setter Property="Foreground" Value="{StaticResource ForegroundGreyDarkBrush}"/>
         <Setter Property="FontFamily" Value="{StaticResource LatoThin}"/>
         <Setter Property="FontSize"   Value="{StaticResource FontSizeRegular}"/>
         <Setter Property="FontWeight" Value="Normal"/>
     </Style>
+
+    <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource BaseControlStyle}"/>
+
 
     <Style x:Key="BaseTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource BaseControlStyle}">
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -31,31 +33,30 @@
     <Style x:Key="LoginTextBoxWithPlaceholder" TargetType="{x:Type TextBox}" BasedOn="{StaticResource BaseTextBoxStyle}">
 
         <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
-        <Setter Property="FontFamily" Value="{StaticResource LatoThin}" />
+        <Setter Property="FontFamily" Value="{StaticResource LatoBold}" />
 
         <Setter Property="Padding" Value="5" />
         <Setter Property="Margin" Value="5" />
 
-        <Setter Property="BorderBrush" Value="{StaticResource ForegroundGreyDarkBrush}" />
-        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="BorderBrush" Value="{StaticResource BackgroundBlueBrush}" />
+        <Setter Property="BorderThickness" Value="0 0 0 2" />
 
         <Setter Property="Background" Value="{StaticResource ForegroundWhiteBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundGreyDarkBrush}" />
 
     </Style>
+    
     <Style x:Key="LoginPasswordBoxWithPlaceholder" TargetType="{x:Type PasswordBox}">
 
         <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
-        <Setter Property="FontFamily" Value="{StaticResource LatoThin}" />
+        <Setter Property="FontFamily" Value="{StaticResource LatoBold}" />
         
         <Setter Property="Padding" Value="5" />
         <Setter Property="Margin" Value="5" />
         
-        <Setter Property="BorderBrush" Value="{StaticResource ForegroundGreyDarkBrush}" />
-        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="BorderBrush" Value="{StaticResource BackgroundBlueBrush}" />
+        <Setter Property="BorderThickness" Value="0 0 0 2" />
 
         <Setter Property="Background" Value="{StaticResource ForegroundWhiteBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundGreyDarkBrush}" />
 
     </Style>
 
@@ -75,8 +76,7 @@
                                    FontFamily="{StaticResource LatoThin}"
                                    Padding="{TemplateBinding Padding}"
                                    VerticalAlignment="Center"
-                                   HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                   Foreground ="Black">
+                                   HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Visibility" Value="Collapsed" />
@@ -119,12 +119,11 @@
             <TextBlock IsHitTestVisible="False"
                                    Text="{TemplateBinding Tag}"
                                    x:Name="placeholder"
-                                   FontFamily="{StaticResource LatoBold}"
+                                   FontFamily="{StaticResource LatoThin}"
                                    FontSize="{TemplateBinding FontSize}"
                                    Padding="{TemplateBinding Padding}"                                  
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                   Foreground="{StaticResource ForegroundGreyDarkBrush}"
                                    />
         </Grid>
 
