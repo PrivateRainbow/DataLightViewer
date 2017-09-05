@@ -19,7 +19,7 @@ namespace Loader.Scanners
 
             parents.Push(arteficialRoot);
 
-            using (var reader = new XmlTextReader(stream) { WhitespaceHandling = WhitespaceHandling.None })
+            using (var reader = new XmlTextReader(stream) { WhitespaceHandling = WhitespaceHandling.None})
             {
                 while (reader.Read())
                 {

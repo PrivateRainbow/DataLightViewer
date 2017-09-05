@@ -189,8 +189,9 @@ namespace DataLightViewer.ViewModels
                 if (await connectionTester.VerifyConnectionAsync(token))
                 {
                     App.ServerConnectionString = serverConnection;
+                    App.IsSessionInitialized = true;
 
-                    Messenger.Instance.NotifyColleagues(MessageType.ConnectionEstablished);
+                    Messenger.Instance.NotifyColleagues(MessageType.OnInitializingProjectFile);
 
                     LogWrapper.WriteInfo($"{nameof(ConnectToServerAsync)} : connection is established!");
                     _objectExplorerWindow.Close();

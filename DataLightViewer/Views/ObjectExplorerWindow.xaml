@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterScreen"
-        Height="280" Width="350">
+        Height="300" Width="350">
 
     <StackPanel Margin="10">
         
@@ -35,20 +35,24 @@
             <ComboBoxItem IsSelected="True">.\SQLEXPRESS</ComboBoxItem>
         </ComboBox>
 
-        <ComboBox HorizontalAlignment="Stretch" Height="25" Margin="5"
-                          ItemsSource="{Binding AuthenticationTypes}"
-                          DisplayMemberPath="Description"
-                          SelectedValuePath ="Type"
-                          SelectedItem ="{Binding SelectedAuthentication}">
+        <ComboBox HorizontalAlignment="Stretch" 
+                  Height="25" 
+                  Margin="5"
+                  ItemsSource="{Binding AuthenticationTypes}"
+                  DisplayMemberPath="Description"
+                  SelectedValuePath ="Type"
+                  SelectedItem ="{Binding SelectedAuthentication}"
+                  Name="AuthenticationComboBox">
         </ComboBox>
 
-        <TextBox Text="{Binding Source=User, Path=Id, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
+        <TextBox                  
+                 Text="{Binding UserId, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
                  Style="{StaticResource LoginTextBoxWithPlaceholder}"
                  Template="{StaticResource PlaceholderTextBoxTemplate}"
                  IsEnabled="{Binding AuthorizedWithCredentials}"
                  Tag="User"/>
 
-        <PasswordBox 
+        <PasswordBox                      
                      Style="{StaticResource LoginPasswordBoxWithPlaceholder}"
                      Template="{StaticResource PlaceholderPasswordBoxTemplate}"
                      IsEnabled="{Binding AuthorizedWithCredentials}"                     
@@ -65,7 +69,7 @@
                     Grid.Column ="0" Height="40"
                     IsEnabled="{Binding IsServerConnectionEntered}"
                     Command="{Binding ConnectCommand}"
-                    Style="{StaticResource LoginButton}"   
+                    Style="{StaticResource LoginConnectButton}"   
                     Content="Go">
             </Button>
             <Button

@@ -70,10 +70,58 @@
                             <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
                             <Setter Property="BorderThickness" Value="0"/>
                         </Trigger>
+
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="{x:Type Button}" x:Key="LoginConnectButton" BasedOn="{StaticResource LoginButton}">
+        <Setter Property="BorderBrush" Value="{StaticResource BackgroundBlueBrush}"/>
+        <Setter Property="Background" Value="{StaticResource ForegroundWhiteBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource BackgroundBlueBrush}"/>
+
+        <Setter Property="BorderThickness" Value="2"/>
+
+        <Setter Property="FontFamily" Value="{StaticResource LatoBold}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border 
+                            CornerRadius="7"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}" 
+                            Background="{TemplateBinding Background}">
+
+                        <ContentPresenter VerticalAlignment="Center" 
+                                          HorizontalAlignment="Center" />
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource BackgroundStatusBarOrangeBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Trigger>
+
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ElementName=AuthenticationComboBox, Path=DisplayMemberPath}" Value="SQL Server Authentication"/>
+                                <Condition Binding="{Binding UserId}" Value=""/>
+                                <Condition Binding="{Binding UserPassword}" Value=""/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiDataTrigger>
+                        
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
 </ResourceDictionary>

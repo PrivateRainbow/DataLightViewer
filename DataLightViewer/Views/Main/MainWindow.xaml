@@ -69,7 +69,8 @@
 
         <!--#region Search TreeViewItem Control -->
 
-        <controls:SearchTreeViewItemBox
+        <controls:SearchTreeViewItemControl
+            x:Name="SearcTVIC"
             Grid.Column="0" 
             Grid.Row="1" 
             Grid.RowSpan="2"
@@ -77,11 +78,13 @@
             Width="Auto"
             Background="Transparent"
             TreeViewItemsSource="{Binding NodeTreeViewModel.Items, Mode=TwoWay}"
-            SearchText="{Binding NodeTreeViewModel.SearchText, Mode=TwoWay}"
+            SearchText="{Binding NodeTreeViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            SearchCommand="{Binding NodeTreeViewModel.SearchCommand}"
+            ClearCommand="{Binding NodeTreeViewModel.ClearCommand}"
             />
 
         <!--#endregion -->
-
+        
         <!--#region Vertical Splitter -->
 
         <GridSplitter Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Width="5"

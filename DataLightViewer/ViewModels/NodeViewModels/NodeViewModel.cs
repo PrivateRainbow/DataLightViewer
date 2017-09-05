@@ -249,14 +249,6 @@ namespace DataLightViewer.ViewModels
             LogWrapper.WriteInfo(message);
         }
 
-        public bool NameContainsText(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return false;
-
-            return Name.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) > -1;
-        }
-
         public void SetArtificalNode()
         {
             Children = new ObservableCollection<NodeViewModel>();

@@ -9,6 +9,8 @@ using DataLightViewer.Memento;
 using DataLightViewer.Mediator;
 using Loader.Types;
 using DataLightViewer.Helpers;
+using DataLightViewer.Commands;
+using DataLightViewer.Filters;
 
 namespace DataLightViewer.ViewModels
 {
@@ -47,6 +49,7 @@ namespace DataLightViewer.ViewModels
                     return;
 
                 _searchText = value;
+                OnPropertyChanged(nameof(SearchText));
             }
         }
 
@@ -58,15 +61,15 @@ namespace DataLightViewer.ViewModels
         {
             Messenger.Instance.Register<NodeMemento>(MessageType.OnOpeningProjectFile, nm => InitializeFromProjectFile(nm));
             Messenger.Instance.Register<MainWindowViewModel>(MessageType.OnSavingProjectFile, wvm => InitializeMemento(wvm));
-            Messenger.Instance.Register(MessageType.ConnectionEstablished, InitializeFromServerConnection);
+            Messenger.Instance.Register(MessageType.OnInitializingProjectFile, InitializeFromServerConnection);
+
+            SearchCommand = new SearchNodeTreeCommand(this);
         }
 
-        private NodeTreeViewModel(Node node, bool lazyLoadChildren)
+        private NodeTreeViewModel(Node node, bool lazyLoadChildren):this()
         {
             _rootNode = new NodeViewModel(node, parent: null, lazyLoadChildren: lazyLoadChildren);
-            Items = new ObservableCollection<NodeViewModel>(new List<NodeViewModel> { _rootNode });
-
-            SearchCommand = new SearchNodeTreeCommand(this);          
+            Items = new ObservableCollection<NodeViewModel>(new List<NodeViewModel> { _rootNode });         
         }
 
         private void InitializeMemento(MainWindowViewModel sender)
@@ -99,6 +102,14 @@ namespace DataLightViewer.ViewModels
         #region Search 
 
         public ICommand SearchCommand { get; }
+        public ICommand ClearCommand {
+            get {
+                return new RelayCommand(() => {
+                    SearchText = string.Empty;
+                    _filteredNodeEnumerator.Dispose();
+                });
+            }
+        }
 
         private class SearchNodeTreeCommand : ICommand
         {
@@ -140,10 +151,12 @@ namespace DataLightViewer.ViewModels
 
             LogWrapper.WriteInfo($"Node with such name ({_searchText}) was found!");
         }
-
+               
         private void VerifyMatchingNodeEnumerator()
         {
-            var matches = FindMatches(_searchText, _rootNode);
+            var searchFilter = NodeSearchFilters.GetFilterBySearchType(SearchFilterType.ByName);
+
+            var matches = Find(searchFilter, _rootNode, _searchText);
             _filteredNodeEnumerator = matches.GetEnumerator();
 
             if (!_filteredNodeEnumerator.MoveNext())
@@ -157,14 +170,16 @@ namespace DataLightViewer.ViewModels
                     );
             }
         }
-        private static IEnumerable<NodeViewModel> FindMatches(string searchText, NodeViewModel node)
-        {
-            if (node.NameContainsText(searchText))
-                yield return node;
 
-            foreach (var child in node.Children)
+
+        private static IEnumerable<NodeViewModel> Find(SearchFilter filter, NodeViewModel parent, string searchText)
+        {
+            if (filter(parent, searchText))
+                yield return parent;
+
+            foreach (var child in parent.Children)
             {
-                foreach (var match in FindMatches(searchText, child))
+                foreach (var match in Find(filter, child, searchText))
                     yield return match;
             }
         }

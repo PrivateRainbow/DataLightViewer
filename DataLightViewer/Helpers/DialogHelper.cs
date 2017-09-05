@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using DataLightViewer.Models;
+using System.Windows;
+using System.Windows.Forms;
 
 namespace DataLightViewer.Helpers
 {
@@ -18,13 +20,13 @@ namespace DataLightViewer.Helpers
         #endregion
 
         public static string GetFileNameFromSaveTextDialog() => GetFileNameFromSaveDialog(_dialogTextBundle);
-        public static string GetFileNameFromOpenTextDialog() => GetFileNameFromOpenDialog(_dialogTextBundle);
-
         public static string GetFileNameFromSaveProjectDialog() => GetFileNameFromSaveDialog(_dialogProjectBundle);
-        public static string GetFileNameFromOpenProjectDialog() => GetFileNameFromOpenDialog(_dialogProjectBundle);
 
         #region Helpers
 
+        /// <summary>
+        /// Getting/setting the directory for opening/saving project file.
+        /// </summary>
         public static string GetFolderNameFromFolderDialog()
         {
             string selectedPath = null;
@@ -35,7 +37,7 @@ namespace DataLightViewer.Helpers
             }
             return selectedPath;
         }
-        
+
         public static string GetFileNameFromSaveDialog(DialogBundle bundle)
         {
             var dialog = new SaveFileDialog() { DefaultExt = bundle.ExtentionByDefault, Filter = bundle.Filter };
@@ -45,13 +47,28 @@ namespace DataLightViewer.Helpers
             else
                 return string.Empty;
         }
-        public static string GetFileNameFromOpenDialog(DialogBundle bundle)
+        
+        public static AppSaveMode SaveCurrentApplicationSession()
         {
-            var dialog = new SaveFileDialog() { DefaultExt = bundle.ExtentionByDefault, Filter = bundle.Filter };
-            if (dialog.ShowDialog() == DialogResult.OK)
-                return dialog.FileName;
-            else
-                return string.Empty;
+            var result = System.Windows.MessageBox.Show("Would you like to save the current working session?", 
+                                                        "DataToolsLight", 
+                                                        MessageBoxButton.YesNoCancel, 
+                                                        MessageBoxImage.Information);
+
+            switch(result)
+            {
+                case MessageBoxResult.Yes:
+                    return AppSaveMode.WithSaving;
+
+                case MessageBoxResult.No:
+                    return AppSaveMode.WithoutSaving;
+
+                case MessageBoxResult.Cancel:
+                    return AppSaveMode.CancelSaving;
+
+                default:
+                    return AppSaveMode.None;
+            }
         }
 
         #endregion 

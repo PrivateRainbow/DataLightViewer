@@ -18,15 +18,11 @@
         /// </summary>
         public const string ExecutionStatus = nameof(ExecutionStatus);
 
-        /// <summary>
-        /// Trigger when new project was created and connection to destination server is succesfully established
-        /// </summary>
-        public const string ConnectionEstablished = nameof(ConnectionEstablished);
 
         /// <summary>
-        /// Trigger when we get the current state of application (data, ui)
+        /// Trigger when new project has been created by establishing the connection to destination server
         /// </summary>
-        public const string MementoInitialized = nameof(MementoInitialized);
+        public const string OnInitializingProjectFile = nameof(OnInitializingProjectFile);
 
         /// <summary>
         /// Trigger when working session must be saved
@@ -37,6 +33,13 @@
         /// Trigger when project file is opened
         /// </summary>
         public const string OnOpeningProjectFile = nameof(OnOpeningProjectFile);
+
+
+        /// <summary>
+        /// Trigger when we get the current state of application (data, ui)
+        /// </summary>
+        public const string MementoInitialized = nameof(MementoInitialized);
+
     }
 
 }
