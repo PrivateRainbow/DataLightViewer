@@ -57,6 +57,7 @@ namespace DataLightViewer.ViewModels
         public NodeViewModel Parent { get; }
         public DbSchemaObjectType Type { get; }
         public Node InnerNode => _node;
+
         public ObservableCollection<NodeViewModel> Children
         {
             get { return _children; }
@@ -82,6 +83,7 @@ namespace DataLightViewer.ViewModels
                 }
             }
         }
+
         public bool IsExpanded
         {
             get => _isExpanded;
@@ -103,6 +105,7 @@ namespace DataLightViewer.ViewModels
 
             }
         }
+
         public bool IsExpandable => _isExpandable;
 
         public bool HasArtificialChild => Children.Count == 1 && Children[0] == ArtificialChild;

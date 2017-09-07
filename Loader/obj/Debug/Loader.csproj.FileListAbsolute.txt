@@ -1,0 +1,5 @@
+E:\Ezra Klimt\Git\master\Loader\bin\Debug\Loader.dll
+E:\Ezra Klimt\Git\master\Loader\bin\Debug\Loader.pdb
+E:\Ezra Klimt\Git\master\Loader\obj\Debug\Loader.csprojResolveAssemblyReference.cache
+E:\Ezra Klimt\Git\master\Loader\obj\Debug\Loader.dll
+E:\Ezra Klimt\Git\master\Loader\obj\Debug\Loader.pdb

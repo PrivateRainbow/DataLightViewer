@@ -9,22 +9,18 @@ namespace Loader.Scanners
 {
     internal class DatabaseXmlScanner : BaseXmlScanner
     {
-        private readonly HashSet<string> _nodeWithArtificialValues;
-        private const string NodeElementSuffix = "-value";
+        public DatabaseXmlScanner(Stream stream) : base(stream) {}
+        public DatabaseXmlScanner(Stream stream, IScanContext context) : base(stream, context) {}
 
-        public DatabaseXmlScanner()
+        public override Node Scan()
         {
-            _nodeWithArtificialValues = new HashSet<string>
+            const string NodeElementSuffix = "-value";
+
+            var nodeWithArtificialValues = new HashSet<string>
             {
                 string.Concat(DbSchemaConstants.View, NodeElementSuffix),
                 string.Concat(DbSchemaConstants.Procedure, NodeElementSuffix)
             };
-        }
-
-        public override Node Scan(Stream stream)
-        {
-            if (stream == null)
-                throw new ArgumentNullException($"{nameof(stream)}");
 
             var arteficialRoot = new Node("Arteficial");
             var parents = new Stack<Node>();
@@ -32,10 +28,16 @@ namespace Loader.Scanners
 
             parents.Push(arteficialRoot);
 
-            using (var reader = new XmlTextReader(stream) { WhitespaceHandling = WhitespaceHandling.None })
+            using (var reader = XmlReader.Create(_input, _readerSettings))
             {
                 while (reader.Read())
                 {
+                    if (!_isValid)
+                    {
+                        _isInterrupted = true;
+                        break;
+                    }
+
                     if (reader.IsEmptyElement)
                     {
                         var child = new Node(reader.Name);
@@ -52,17 +54,18 @@ namespace Loader.Scanners
                                 var elementName = reader.Name;
                                 var child = new Node(elementName);
 
-                                if (reader.HasAttributes) FillNodeAttributes(child, reader);
+                                if (reader.HasAttributes)
+                                    FillNodeAttributes(child, reader);
 
                                 tags.Push(elementName);
-                                if(!_nodeWithArtificialValues.Contains(tags.Peek()))
+                                if (!nodeWithArtificialValues.Contains(tags.Peek()))
                                     parents.Peek().Add(child);
                                 parents.Push(child);
 
                                 break;
 
-                            case XmlNodeType.Text:                                                                
-                                if (!_nodeWithArtificialValues.Contains(tags.Peek()))
+                            case XmlNodeType.Text:
+                                if (!nodeWithArtificialValues.Contains(tags.Peek()))
                                     parents.Peek().Value = reader.Value;
                                 else
                                 {
@@ -75,13 +78,16 @@ namespace Loader.Scanners
                             case XmlNodeType.EndElement:
 
                                 if (reader.Name != tags.Peek()) continue;
-                                    parents.Pop();
-                                    tags.Pop();
+                                parents.Pop();
+                                tags.Pop();
                                 break;
                         }
                     }
                 }
 
+                if (_isInterrupted)
+                    throw new InvalidOperationException(_onValidationFailedMessage);
+                    
                 // dispose arteficial root because of it was used only for building of the main node
                 _scannedNode = arteficialRoot.Children[0];
                 _scannedNode.Parent = null;

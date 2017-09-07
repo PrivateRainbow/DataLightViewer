@@ -1,5 +1,5 @@
-﻿using DataLightViewer.ViewModels;
-using System.Security;
+﻿using DataLightViewer.Helpers;
+using DataLightViewer.ViewModels;
 using System.Windows;
 
 namespace DataLightViewer.Views
@@ -11,8 +11,17 @@ namespace DataLightViewer.Views
     {
         public ObjectExplorerWindow()
         {
+            var vm = new ExplorerViewModel(this);
+            vm.ValidationCheckMessage += ValidationCheckHandler;
+
+            DataContext = vm;
+
             InitializeComponent();
-            DataContext = new ExplorerViewModel(this);
+        }
+
+        private void ValidationCheckHandler(object sender, System.EventArgs e)
+        {
+            passwordField.GetBindingExpression(PasswordBoxAssistant.BoundPassword).UpdateSource();
         }
     }
 }

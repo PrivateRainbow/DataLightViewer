@@ -48,12 +48,13 @@ namespace DataLightViewer.Helpers
                 return string.Empty;
         }
         
-        public static AppSaveMode SaveCurrentApplicationSession()
+        public static AppSaveMode SaveCurrentApplicationSession(bool withCancelation = true)
         {
+            var msgBoxBtns = withCancelation ? MessageBoxButton.YesNoCancel : MessageBoxButton.YesNo;
             var result = System.Windows.MessageBox.Show("Would you like to save the current working session?", 
-                                                        "DataToolsLight", 
-                                                        MessageBoxButton.YesNoCancel, 
-                                                        MessageBoxImage.Information);
+                                                        "DataToolsLight",
+                                                        msgBoxBtns, 
+                                                        MessageBoxImage.Question);
 
             switch(result)
             {

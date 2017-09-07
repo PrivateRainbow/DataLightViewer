@@ -18,7 +18,6 @@ namespace Loader.Services.Helpers
 
             _headerNodes = new HashSet<string>()
             {
-                DbSchemaConstants.Database,
                 DbSchemaConstants.Tables,
                 DbSchemaConstants.Views,
                 DbSchemaConstants.Procedures,
@@ -36,7 +35,8 @@ namespace Loader.Services.Helpers
                 throw new ArgumentException($"{nameof(node)}");
 
             var scriptBuilder = new StringBuilder();
-            if (IsRootNode(node))
+
+            if (IsRootNode(node) && node.Name == DbSchemaConstants.Database)
             {
                 var database = _buildFactory.BuildDatabase(node);
                 var tables = node.Children.Find(t => t.Name == DbSchemaConstants.Tables);
@@ -48,10 +48,31 @@ namespace Loader.Services.Helpers
                 scriptBuilder.AppendLine(BuildHeaderNode(views));
                 scriptBuilder.AppendLine(BuildHeaderNode(procedures));
             }
-            else if (IsHeaderNode(node))
+            if (IsHeaderNode(node))
                 scriptBuilder.AppendLine(BuildHeaderNode(node));
             else
                 scriptBuilder.AppendLine(BuildCommonNode(node));
+
+            return scriptBuilder.ToString();
+        }
+
+        private string CustomDatabaseNodeConstruction(Node node, bool withChildren = false)
+        {
+            var scriptBuilder = new StringBuilder();
+
+            var database = _buildFactory.BuildDatabase(node);
+            scriptBuilder.AppendLine(database);
+
+            if (withChildren)
+            {
+                var tables = node.Children.Find(t => t.Name == DbSchemaConstants.Tables);
+                var views = node.Children.Find(t => t.Name == DbSchemaConstants.Views);
+                var procedures = node.Children.Find(t => t.Name == DbSchemaConstants.Procedures);
+
+                scriptBuilder.AppendLine(BuildHeaderNode(tables));
+                scriptBuilder.AppendLine(BuildHeaderNode(views));
+                scriptBuilder.AppendLine(BuildHeaderNode(procedures));
+            }
 
             return scriptBuilder.ToString();
         }
@@ -81,6 +102,7 @@ namespace Loader.Services.Helpers
             }
             return builder.ToString();
         }
+
         private string BuildCommonNode(Node node)
         {
             var type = node.Name;

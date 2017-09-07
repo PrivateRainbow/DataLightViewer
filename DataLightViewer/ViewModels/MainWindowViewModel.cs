@@ -11,13 +11,14 @@ using System.Threading.Tasks;
 
 namespace DataLightViewer.ViewModels
 {
-    public sealed class MainWindowViewModel : BaseViewModel
+    /// <summary>
+    /// Hello, comrades
+    /// I hope u enjoy (=
+    /// </summary>
+    public class MainWindowViewModel : BaseViewModel
     {
         #region Data
 
-        /// <summary>
-        /// Hold the current path to the folder of the project
-        /// </summary>
         private string _currentProjectFolderPath;
         private SavingProjectStrategy _saveStrategy = SavingProjectStrategy.None;
 
@@ -38,7 +39,7 @@ namespace DataLightViewer.ViewModels
         public ICommand OpenProjectCommand { get; }
         public ICommand SaveProjectCommand { get; }
         public ICommand SaveProjectAsCommand { get; }
-        public ICommand ExitCommand { get; }
+        public ICommand CloseCommand { get; }
 
         #endregion
 
@@ -55,6 +56,7 @@ namespace DataLightViewer.ViewModels
             CreateProjectCommand = new RelayCommand(() => CreateProject());
             SaveProjectCommand = new RelayCommand(() => SaveProject());
             SaveProjectAsCommand = new RelayCommand(() => SaveProjectAs());
+            CloseCommand = new RelayCommand(() => RunDefaultSaving());
 
             Messenger.Instance.Register<NodeMemento>(MessageType.MementoInitialized, async nm => await OnProjectSaving(nm));
         }
@@ -68,9 +70,8 @@ namespace DataLightViewer.ViewModels
             if (App.IsSessionInitialized)
                 RunSafeProjectCreating();
             else
-                RunProjectCreating();                           
+                RunProjectCreating();
         }
-
         private void OpenProject()
         {
             if (App.IsSessionInitialized)
@@ -101,6 +102,7 @@ namespace DataLightViewer.ViewModels
                     break;
             }
         }
+        private async void RunDefaultProjectOpening() => await RunProjectOpening();
 
         private void RunSafeProjectCreating()
         {
@@ -121,15 +123,13 @@ namespace DataLightViewer.ViewModels
                     break;
             }
         }
-        
+        private void RunProjectCreating() => new ObjectExplorerWindow().ShowDialog();
 
-        private async void RunDefaultProjectOpening() => await RunProjectOpening();
-
-        private void RunProjectCreating()
+        private void RunDefaultSaving()
         {
-            new ObjectExplorerWindow().ShowDialog();
+            if(AppSaveMode.WithSaving == DialogHelper.SaveCurrentApplicationSession(withCancelation: false))
+                SaveProject();
         }
-
 
         private async Task RunProjectOpening()
         {
@@ -184,7 +184,6 @@ namespace DataLightViewer.ViewModels
         {
             await RunProjectSaving(memento, _saveStrategy);
         }
-
         private async Task RunProjectSaving(NodeMemento memento, SavingProjectStrategy strategy)
         {
             string folder = string.Empty;
@@ -215,6 +214,6 @@ namespace DataLightViewer.ViewModels
 
     }
     #endregion
-
+           
 }
 

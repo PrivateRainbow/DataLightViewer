@@ -6,41 +6,14 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Windows;
 using DataLightViewer.Mediator;
 using System.Xml.Schema;
-using Loader.Scanners.ValidatingScanner;
+using Loader.Scanners;
+using DataLightViewer.Helpers;
 
 namespace DataLightViewer.Memento
 {
-
-    public static class ValidationSchemaProvider
-    {
-        private const string TargetXmlNamespace = "http://www.w3.org/2001/XMLSchema";
-
-        public static XmlSchemaSet ProvideValidationSchema(this ProjectFileType type)
-        {
-            string schemaUri = string.Empty;
-
-            switch(type)
-            {
-                case ProjectFileType.Data:
-                    schemaUri = Resources.DataToolsLight_Data;
-                    break;
-
-                case ProjectFileType.UI:
-                    schemaUri = string.Empty;
-                    break;
-            }
-
-            var schema = new XmlSchemaSet();
-            schema.Add(TargetXmlNamespace, schemaUri);
-
-            return schema;
-        }
-    }
-
 
     public class AppStateService
     {
@@ -82,11 +55,11 @@ namespace DataLightViewer.Memento
                 var uiStateFilePath = Path.Combine(folderPath, FullUiStateFileName);
 
                 var dataNode = _nodeMemento.NodeViewModel.InnerNode;
-                dataNode.AttachAttribute(new KeyValuePair<string, string>(ProjectFileTypeLabel, DefaultDataStateFileName));
-                dataNode.AttachAttribute(new KeyValuePair<string, string>(App.ServerConnectionStringLiteral, App.ServerConnectionString));
-
                 var uiNode = GetUINodeState();
-                uiNode.AttachAttribute(new KeyValuePair<string, string>(ProjectFileTypeLabel, DefaultUiStateFileName));
+
+                dataNode.Attributes[ProjectFileTypeLabel] = DefaultDataStateFileName;
+                dataNode.Attributes[App.ServerConnectionStringLiteral] = App.ServerConnectionString.Encrypt();
+                uiNode.Attributes[ProjectFileTypeLabel] = DefaultUiStateFileName;
 
                 var writeDataTask = WriteProjectFileAsync(dataStateFilePath, dataNode, SourceSchemaType.Database);
                 var writeUiTask = WriteProjectFileAsync(uiStateFilePath, uiNode, SourceSchemaType.File);
@@ -111,12 +84,19 @@ namespace DataLightViewer.Memento
                 var dataStateFilePath = Path.Combine(folderPath, FullDataStateFileName);
                 var uiStateFilePath = Path.Combine(folderPath, FullUiStateFileName);
 
-                var readDataTask = ReadProjectFileAsync(dataStateFilePath, SourceSchemaType.Database, ProjectFileType.Data.ProvideValidationSchema());
-                var readUiTask = ReadProjectFileAsync(uiStateFilePath, SourceSchemaType.File, ProjectFileType.UI.ProvideValidationSchema());
+                var readDataTask = ReadProjectFileAsync(dataStateFilePath, SourceSchemaType.Database, ProjectFileType.Data.GetSchema());
+                var readUiTask = ReadProjectFileAsync(uiStateFilePath, SourceSchemaType.File, ProjectFileType.UI.GetSchema());
 
                 await Task.WhenAll(readDataTask, readUiTask).ContinueWith(nodes => InitializeMemento(nodes));
 
                 LogWrapper.WriteInfo($"Project was opened by path ({folderPath})", "Opened.");
+            }
+            catch(InvalidOperationException ex)
+            {
+                var msg = "Error on opening the project. Incorrect project type";
+                LogWrapper.WriteError(ex.Message, ex, "Incorrect project type.");
+                MessageBox.Show(msg, "DataToolsLight", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw;
             }
             catch (Exception ex)
             {
@@ -145,7 +125,7 @@ namespace DataLightViewer.Memento
                 }
             });
         }
-        private Task<Node> ReadProjectFileAsync(string pathToFile, SourceSchemaType schemaType, XmlSchemaSet validationSchema)
+        private Task<Node> ReadProjectFileAsync(string pathToFile, SourceSchemaType schemaType, XmlSchemaSet validationSchema = null)
         {
             return Task.Run(() =>
             {
@@ -156,9 +136,8 @@ namespace DataLightViewer.Memento
 
                     using (var stream = File.OpenRead(pathToFile))
                     {
-                        //var scanner = ScannerFactory.MakeScanner(schemaType);
-                        var scanner = new XmlValidatingScanner();
-                        var node = scanner.Scan(stream, validationSchema);
+                        var scanner = ScannerFactory.Make(schemaType, stream, new XmlNodeValidationContext(validationSchema));
+                        var node = scanner.Scan();
                         
                         return node;
                     }
@@ -178,17 +157,16 @@ namespace DataLightViewer.Memento
                 var dataNode = initializedNodes.Find(n => n.Attributes[ProjectFileTypeLabel] == DefaultDataStateFileName);
                 var uiNode = initializedNodes.Find(n => n.Attributes[ProjectFileTypeLabel] == DefaultUiStateFileName);
 
-                App.ServerConnectionString = string.Copy(dataNode.Attributes[App.ServerConnectionStringLiteral]);
+                dataNode.Attributes.Remove(ProjectFileTypeLabel);
+                uiNode.Attributes.Remove(ProjectFileTypeLabel);
+
+                App.ServerConnectionString = string.Copy(dataNode.Attributes[App.ServerConnectionStringLiteral]).Decrypt();
+                dataNode.Attributes.Remove(App.ServerConnectionStringLiteral);
 
                 var viewModel = new NodeViewModel(dataNode, parent: null, lazyLoadChildren: false);
                 NodeStateConvertor.TransformToViewModelNode(viewModel, uiNode);
 
                 var memento = new NodeMemento(viewModel);
-
-                dataNode.Attributes.Remove(App.ServerConnectionStringLiteral);
-                dataNode.Attributes.Remove(ProjectFileTypeLabel);
-                uiNode.Attributes.Remove(ProjectFileTypeLabel);
-
                 Messenger.Instance.NotifyColleagues(MessageType.OnOpeningProjectFile, memento);
             }
             catch (AggregateException)

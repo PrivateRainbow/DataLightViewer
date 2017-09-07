@@ -20,8 +20,7 @@ namespace Loader.Services.Builders
             {
                 SqlConnection.Open();
 
-                var database = new Node(SqlConnection.Database);
-
+                var database = new Node(DbSchemaConstants.Database);
                 var tables = new Node(DbSchemaConstants.Tables);
                 var views = new Node(DbSchemaConstants.Views);
                 var procedures = new Node(DbSchemaConstants.Procedures);

@@ -10,8 +10,8 @@ namespace DataLightViewer.Views.Main
     {
         public MainWindow()
         {
-            InitializeComponent();
             DataContext = new MainWindowViewModel();
+            InitializeComponent();
         }
     }
 }

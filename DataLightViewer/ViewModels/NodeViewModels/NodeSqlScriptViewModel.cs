@@ -40,8 +40,11 @@ namespace DataLightViewer.ViewModels
             try
             {
                 var filename = DialogHelper.GetFileNameFromSaveTextDialog();
+                if (string.IsNullOrEmpty(filename))
+                    return;
+
                 LogWrapper.WriteInfo($"Starting to write script to {filename}", "Writing script ...");
-                await Script.WriteTextAsync(DialogHelper.GetFileNameFromSaveTextDialog());
+                await Script.WriteTextAsync(filename);
             }
             catch (Exception ex)
             {

@@ -21,7 +21,9 @@ namespace DataLightViewer.Memento
         /// <returns></returns>
         public static Node ToUIStateNode(this NodeViewModel vm)
         {
-            var node = new Node(vm.Name.Replace(' ', '_'));
+            // dummy node has no inner node
+            var name = vm?.InnerNode?.Name ?? vm.Name;
+            var node = new Node(name);
 
             var isExpandedState = new KeyValuePair<string, string>(IsExpandedAttr, vm.IsExpanded.ToString());
             var isSelectedState = new KeyValuePair<string, string>(IsSelectedAttr, vm.IsSelected.ToString());

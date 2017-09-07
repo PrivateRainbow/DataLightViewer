@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DataLightViewer.Views"
+        xmlns:helper="clr-namespace:DataLightViewer.Helpers"
         mc:Ignorable="d"
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterScreen"
@@ -52,11 +53,22 @@
                  IsEnabled="{Binding AuthorizedWithCredentials}"
                  Tag="User"/>
 
-        <PasswordBox                      
+        <PasswordBox 
+                     Tag="Password"
                      Style="{StaticResource LoginPasswordBoxWithPlaceholder}"
                      Template="{StaticResource PlaceholderPasswordBoxTemplate}"
-                     IsEnabled="{Binding AuthorizedWithCredentials}"                     
-                     Tag="Password"/>
+                     IsEnabled="{Binding AuthorizedWithCredentials}"
+                     x:Name="passwordField"
+                     helper:PasswordBoxAssistant.BindPassword="True">
+
+            <helper:PasswordBoxAssistant.BoundPassword>
+                <Binding Path="UserPassword" 
+                         Mode="OneWayToSource" 
+                         UpdateSourceTrigger="PropertyChanged">
+                </Binding>
+            </helper:PasswordBoxAssistant.BoundPassword>
+
+        </PasswordBox>
 
         <Grid>
             <Grid.ColumnDefinitions>

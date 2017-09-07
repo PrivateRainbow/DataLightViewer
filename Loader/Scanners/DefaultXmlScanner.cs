@@ -8,21 +8,27 @@ namespace Loader.Scanners
 {
     internal class DefaultXmlScanner : BaseXmlScanner
     {
-        public override Node Scan(Stream stream)
-        {
-            if (stream == null)
-                throw new ArgumentNullException($"{nameof(stream)}");
+        public DefaultXmlScanner(Stream input) : base(input) {}
+        public DefaultXmlScanner(Stream input, IScanContext context) : base(input, context) {}
 
+        public override Node Scan()
+        {
             var arteficialRoot = new Node("Arteficial");
             var parents = new Stack<Node>();
             var tags = new Stack<string>();
 
             parents.Push(arteficialRoot);
 
-            using (var reader = new XmlTextReader(stream) { WhitespaceHandling = WhitespaceHandling.None})
+            using (var reader = XmlReader.Create(_input, _readerSettings))
             {
                 while (reader.Read())
                 {
+                    if (!_isValid)
+                    {
+                        _isInterrupted = true;
+                        break;
+                    }
+
                     if (reader.IsEmptyElement)
                     {
                         var child = new Node(reader.Name);
@@ -53,8 +59,11 @@ namespace Loader.Scanners
                             tags.Pop();
                             parents.Pop();
                         }
-                    }
+                    }                  
                 }
+
+                if (_isInterrupted)
+                    throw new InvalidOperationException(_onValidationFailedMessage);
 
                 // dispose arteficial root because of it was used only for building of the main node
                 _scannedNode = arteficialRoot.Children[0];

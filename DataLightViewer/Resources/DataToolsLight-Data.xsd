@@ -2,208 +2,226 @@
   <xs:element name="Server">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="Databases">
-          <xs:complexType>
+        <xs:element name="Database" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType mixed="true">
             <xs:sequence>
-              <xs:element name="Database">
+              <xs:element name="Tables" minOccurs="0">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element name="Tables">
-                      <xs:complexType>
-                        <xs:choice maxOccurs="unbounded" minOccurs="0">
-                          <xs:element name="Table">
-                            <xs:complexType>
+                    <xs:element name="Table" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType mixed="true">
+                        <xs:sequence>
+                          <xs:element name="Columns" minOccurs="0">
+                            <xs:complexType mixed="true">
                               <xs:sequence>
-                                <xs:element name="Columns">
+                                <xs:element name="Column" maxOccurs="unbounded" minOccurs="0">
                                   <xs:complexType>
-                                    <xs:sequence>
-                                      <xs:element name="Column" maxOccurs="unbounded" minOccurs="0">
-                                        <xs:complexType>
-                                          <xs:simpleContent>
-                                            <xs:extension base="xs:string">
-                                              <xs:attribute type="xs:string" name="name" use="optional"/>
-                                              <xs:attribute type="xs:string" name="type" use="optional"/>
-                                              <xs:attribute type="xs:byte" name="precision" use="optional"/>
-                                              <xs:attribute type="xs:byte" name="scale" use="optional"/>
-                                              <xs:attribute type="xs:string" name="is_nullable" use="optional"/>
-                                              <xs:attribute type="xs:string" name="is_identity" use="optional"/>
-                                              <xs:attribute type="xs:byte" name="maxLength" use="optional"/>
-                                            </xs:extension>
-                                          </xs:simpleContent>
-                                        </xs:complexType>
-                                      </xs:element>
-                                    </xs:sequence>
-                                  </xs:complexType>
-                                </xs:element>
-                                <xs:element name="Keys">
-                                  <xs:complexType>
-                                    <xs:sequence>
-                                      <xs:element name="Key" maxOccurs="unbounded" minOccurs="0">
-                                        <xs:complexType>
-                                          <xs:simpleContent>
-                                            <xs:extension base="xs:string">
-                                              <xs:attribute type="xs:string" name="name" use="optional"/>
-                                              <xs:attribute type="xs:string" name="type" use="optional"/>
-                                              <xs:attribute type="xs:string" name="type_desc" use="optional"/>
-                                              <xs:attribute type="xs:string" name="create_date" use="optional"/>
-                                              <xs:attribute type="xs:string" name="modify_date" use="optional"/>
-                                              <xs:attribute type="xs:string" name="isDescendingKey" use="optional"/>
-                                              <xs:attribute type="xs:string" name="columnName" use="optional"/>
-                                              <xs:attribute type="xs:string" name="parentTable" use="optional"/>
-                                              <xs:attribute type="xs:string" name="parentColumn" use="optional"/>
-                                              <xs:attribute type="xs:string" name="referentialTable" use="optional"/>
-                                              <xs:attribute type="xs:string" name="referentialColumn" use="optional"/>
-                                              <xs:attribute type="xs:string" name="is_disabled" use="optional"/>
-                                              <xs:attribute type="xs:string" name="onDeleteAction" use="optional"/>
-                                              <xs:attribute type="xs:string" name="onUpdateAction" use="optional"/>
-                                            </xs:extension>
-                                          </xs:simpleContent>
-                                        </xs:complexType>
-                                      </xs:element>
-                                    </xs:sequence>
-                                  </xs:complexType>
-                                </xs:element>
-                                <xs:element name="Constraints">
-                                  <xs:complexType>
-                                    <xs:sequence>
-                                      <xs:element name="Constraint" maxOccurs="unbounded" minOccurs="0">
-                                        <xs:complexType>
-                                          <xs:simpleContent>
-                                            <xs:extension base="xs:string">
-                                              <xs:attribute type="xs:string" name="definition" use="optional"/>
-                                              <xs:attribute type="xs:string" name="name" use="optional"/>
-                                              <xs:attribute type="xs:string" name="columnName" use="optional"/>
-                                              <xs:attribute type="xs:string" name="type" use="optional"/>
-                                              <xs:attribute type="xs:string" name="type_desc" use="optional"/>
-                                              <xs:attribute type="xs:string" name="create_date" use="optional"/>
-                                              <xs:attribute type="xs:string" name="modify_date" use="optional"/>
-                                            </xs:extension>
-                                          </xs:simpleContent>
-                                        </xs:complexType>
-                                      </xs:element>
-                                    </xs:sequence>
-                                  </xs:complexType>
-                                </xs:element>
-                                <xs:element name="Indexes">
-                                  <xs:complexType>
-                                    <xs:sequence>
-                                      <xs:element name="Index" maxOccurs="unbounded" minOccurs="0">
-                                        <xs:complexType>
-                                          <xs:simpleContent>
-                                            <xs:extension base="xs:string">
-                                              <xs:attribute type="xs:string" name="name" use="optional"/>
-                                              <xs:attribute type="xs:string" name="columnName" use="optional"/>
-                                              <xs:attribute type="xs:string" name="type_desc" use="optional"/>
-                                              <xs:attribute type="xs:string" name="isPrimary" use="optional"/>
-                                              <xs:attribute type="xs:string" name="isUnique" use="optional"/>
-                                              <xs:attribute type="xs:string" name="is_descending_key" use="optional"/>
-                                            </xs:extension>
-                                          </xs:simpleContent>
-                                        </xs:complexType>
-                                      </xs:element>
-                                    </xs:sequence>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute type="xs:string" name="name" use="optional"/>
+                                        <xs:attribute type="xs:string" name="type" use="optional"/>
+                                        <xs:attribute type="xs:byte" name="precision" use="optional"/>
+                                        <xs:attribute type="xs:byte" name="scale" use="optional"/>
+                                        <xs:attribute type="xs:string" name="is_nullable" use="optional"/>
+                                        <xs:attribute type="xs:string" name="is_identity" use="optional"/>
+                                        <xs:attribute type="xs:byte" name="maxLength" use="optional"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
                                   </xs:complexType>
                                 </xs:element>
                               </xs:sequence>
-                              <xs:attribute type="xs:string" name="schemaName" use="optional"/>
-                              <xs:attribute type="xs:string" name="name" use="optional"/>
-                              <xs:attribute type="xs:int" name="object_id" use="optional"/>
-                              <xs:attribute type="xs:string" name="type" use="optional"/>
-                              <xs:attribute type="xs:string" name="type_desc" use="optional"/>
-                              <xs:attribute type="xs:string" name="create_date" use="optional"/>
-                              <xs:attribute type="xs:string" name="modify_date" use="optional"/>
                             </xs:complexType>
                           </xs:element>
-                        </xs:choice>
-                      </xs:complexType>
-                    </xs:element>
-                    <xs:element name="Views">
-                      <xs:complexType>
-                        <xs:sequence>
-                          <xs:element name="View" maxOccurs="unbounded" minOccurs="0">
-                            <xs:complexType>
+                          <xs:element name="Keys" minOccurs="0">
+                            <xs:complexType mixed="true">
                               <xs:sequence>
-                                <xs:element type="xs:string" name="View-value"/>
-                                <xs:element name="Columns">
+                                <xs:element name="Key" maxOccurs="unbounded" minOccurs="0">
                                   <xs:complexType>
-                                    <xs:sequence>
-                                      <xs:element name="Column" maxOccurs="unbounded" minOccurs="0">
-                                        <xs:complexType>
-                                          <xs:simpleContent>
-                                            <xs:extension base="xs:string">
-                                              <xs:attribute type="xs:string" name="name" use="optional"/>
-                                              <xs:attribute type="xs:string" name="type" use="optional"/>
-                                              <xs:attribute type="xs:byte" name="precision" use="optional"/>
-                                              <xs:attribute type="xs:byte" name="scale" use="optional"/>
-                                              <xs:attribute type="xs:string" name="is_nullable" use="optional"/>
-                                              <xs:attribute type="xs:string" name="is_identity" use="optional"/>
-                                              <xs:attribute type="xs:byte" name="maxLength" use="optional"/>
-                                            </xs:extension>
-                                          </xs:simpleContent>
-                                        </xs:complexType>
-                                      </xs:element>
-                                    </xs:sequence>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute type="xs:string" name="name" use="optional"/>
+                                        <xs:attribute type="xs:string" name="type" use="optional"/>
+                                        <xs:attribute type="xs:string" name="type_desc" use="optional"/>
+                                        <xs:attribute type="xs:string" name="create_date" use="optional"/>
+                                        <xs:attribute type="xs:string" name="modify_date" use="optional"/>
+                                        <xs:attribute type="xs:string" name="isDescendingKey" use="optional"/>
+                                        <xs:attribute type="xs:string" name="columnName" use="optional"/>
+                                        <xs:attribute type="xs:string" name="parentTable" use="optional"/>
+                                        <xs:attribute type="xs:string" name="parentColumn" use="optional"/>
+                                        <xs:attribute type="xs:string" name="referentialTable" use="optional"/>
+                                        <xs:attribute type="xs:string" name="referentialColumn" use="optional"/>
+                                        <xs:attribute type="xs:string" name="is_disabled" use="optional"/>
+                                        <xs:attribute type="xs:string" name="onDeleteAction" use="optional"/>
+                                        <xs:attribute type="xs:string" name="onUpdateAction" use="optional"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
                                   </xs:complexType>
                                 </xs:element>
-                                <xs:element type="xs:string" name="Indexes"/>
                               </xs:sequence>
-                              <xs:attribute type="xs:string" name="name" use="optional"/>
-                              <xs:attribute type="xs:int" name="object_id" use="optional"/>
-                              <xs:attribute type="xs:string" name="schemaName" use="optional"/>
-                              <xs:attribute type="xs:byte" name="schema_id" use="optional"/>
-                              <xs:attribute type="xs:string" name="create_date" use="optional"/>
-                              <xs:attribute type="xs:string" name="modify_date" use="optional"/>
+                            </xs:complexType>
+                          </xs:element>			  
+                          <xs:element name="Constraints" minOccurs="0">
+                            <xs:complexType mixed="true">
+                              <xs:sequence>
+                                <xs:element name="Constraint" maxOccurs="unbounded" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute type="xs:string" name="definition" use="optional"/>
+                                        <xs:attribute type="xs:string" name="name" use="optional"/>
+                                        <xs:attribute type="xs:string" name="columnName" use="optional"/>
+                                        <xs:attribute type="xs:string" name="type" use="optional"/>
+                                        <xs:attribute type="xs:string" name="type_desc" use="optional"/>
+                                        <xs:attribute type="xs:string" name="create_date" use="optional"/>
+                                        <xs:attribute type="xs:string" name="modify_date" use="optional"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>			  
+                          <xs:element name="Indexes" minOccurs="0">
+                            <xs:complexType mixed="true">
+                              <xs:sequence>
+                                <xs:element name="Index" maxOccurs="unbounded" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute type="xs:string" name="name" use="optional"/>
+                                        <xs:attribute type="xs:string" name="columnName" use="optional"/>
+                                        <xs:attribute type="xs:string" name="type_desc" use="optional"/>
+                                        <xs:attribute type="xs:string" name="isPrimary" use="optional"/>
+                                        <xs:attribute type="xs:string" name="isUnique" use="optional"/>
+                                        <xs:attribute type="xs:string" name="is_descending_key" use="optional"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>					  
+                        </xs:sequence>
+                        <xs:attribute type="xs:string" name="schemaName" use="optional"/>
+                        <xs:attribute type="xs:string" name="name" use="optional"/>
+                        <xs:attribute type="xs:int" name="object_id" use="optional"/>
+                        <xs:attribute type="xs:string" name="type" use="optional"/>
+                        <xs:attribute type="xs:string" name="type_desc" use="optional"/>
+                        <xs:attribute type="xs:string" name="create_date" use="optional"/>
+                        <xs:attribute type="xs:string" name="modify_date" use="optional"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Views" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="View" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="View-value"/>					  
+                          <xs:element name="Columns" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="Column" maxOccurs="unbounded" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute type="xs:string" name="name" use="optional"/>
+                                        <xs:attribute type="xs:string" name="type" use="optional"/>
+                                        <xs:attribute type="xs:byte" name="precision" use="optional"/>
+                                        <xs:attribute type="xs:byte" name="scale" use="optional"/>
+                                        <xs:attribute type="xs:string" name="is_nullable" use="optional"/>
+                                        <xs:attribute type="xs:string" name="is_identity" use="optional"/>
+                                        <xs:attribute type="xs:byte" name="maxLength" use="optional"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>				  						  					  
+                        <xs:element name="Indexes" minOccurs="0">
+                            <xs:complexType mixed="true">
+                              <xs:sequence>
+                                <xs:element name="Index" maxOccurs="unbounded" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute type="xs:string" name="name" use="optional"/>
+                                        <xs:attribute type="xs:string" name="columnName" use="optional"/>
+                                        <xs:attribute type="xs:string" name="type_desc" use="optional"/>
+                                        <xs:attribute type="xs:string" name="isPrimary" use="optional"/>
+                                        <xs:attribute type="xs:string" name="isUnique" use="optional"/>
+                                        <xs:attribute type="xs:string" name="is_descending_key" use="optional"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>						  				  
+                        </xs:sequence>
+                        <xs:attribute type="xs:string" name="name" use="optional"/>
+                        <xs:attribute type="xs:int" name="object_id" use="optional"/>
+                        <xs:attribute type="xs:string" name="schemaName" use="optional"/>
+                        <xs:attribute type="xs:byte" name="schema_id" use="optional"/>
+                        <xs:attribute type="xs:string" name="create_date" use="optional"/>
+                        <xs:attribute type="xs:string" name="modify_date" use="optional"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Procedures" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Procedure" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="Procedure-value"/>
+                          <xs:element name="Parameters" minOccurs="0">
+                            <xs:complexType mixed="true">
+                              <xs:sequence>
+                                <xs:element name="Parameter" maxOccurs="unbounded" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute type="xs:string" name="name" use="optional"/>
+                                        <xs:attribute type="xs:string" name="type" use="optional"/>
+                                        <xs:attribute type="xs:string" name="is_output" use="optional"/>
+                                        <xs:attribute type="xs:string" name="has_default_value" use="optional"/>
+                                        <xs:attribute type="xs:string" name="default_value" use="optional"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>
-                      </xs:complexType>
-                    </xs:element>
-                    <xs:element name="Procedures">
-                      <xs:complexType>
-                        <xs:sequence>
-                          <xs:element name="Procedure" maxOccurs="unbounded" minOccurs="0">
-                            <xs:complexType>
-                              <xs:sequence>
-                                <xs:element type="xs:string" name="Procedure-value"/>
-                                <xs:element name="Parameters">
-                                  <xs:complexType mixed="true">
-                                    <xs:sequence>
-                                      <xs:element name="Parameter" maxOccurs="unbounded" minOccurs="0">
-                                        <xs:complexType>
-                                          <xs:simpleContent>
-                                            <xs:extension base="xs:string">
-                                              <xs:attribute type="xs:string" name="name" use="optional"/>
-                                              <xs:attribute type="xs:string" name="type" use="optional"/>
-                                              <xs:attribute type="xs:string" name="is_output" use="optional"/>
-                                              <xs:attribute type="xs:string" name="has_default_value" use="optional"/>
-                                              <xs:attribute type="xs:string" name="default_value" use="optional"/>
-                                            </xs:extension>
-                                          </xs:simpleContent>
-                                        </xs:complexType>
-                                      </xs:element>
-                                    </xs:sequence>
-                                  </xs:complexType>
-                                </xs:element>
-                              </xs:sequence>
-                              <xs:attribute type="xs:string" name="name" use="optional"/>
-                              <xs:attribute type="xs:int" name="object_id" use="optional"/>
-                              <xs:attribute type="xs:string" name="schemaName" use="optional"/>
-                              <xs:attribute type="xs:string" name="create_date" use="optional"/>
-                              <xs:attribute type="xs:string" name="modify_date" use="optional"/>
-                              <xs:attribute type="xs:string" name="type" use="optional"/>
-                              <xs:attribute type="xs:string" name="type_desc" use="optional"/>
-                            </xs:complexType>
-                          </xs:element>
-                        </xs:sequence>
+                        <xs:attribute type="xs:string" name="name" use="optional"/>
+                        <xs:attribute type="xs:int" name="object_id" use="optional"/>
+                        <xs:attribute type="xs:string" name="schemaName" use="optional"/>
+                        <xs:attribute type="xs:string" name="create_date" use="optional"/>
+                        <xs:attribute type="xs:string" name="modify_date" use="optional"/>
+                        <xs:attribute type="xs:string" name="type" use="optional"/>
+                        <xs:attribute type="xs:string" name="type_desc" use="optional"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="optional"/>
+            <xs:attribute type="xs:integer" name="database_id" use="optional"/>
+            <xs:attribute type="xs:string" name="create_date" use="optional"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
+      <xs:attribute type="xs:string" name="name"/>
+      <xs:attribute type="xs:string" name="file-type"/>
       <xs:attribute type="xs:string" name="connectionString"/>
     </xs:complexType>
   </xs:element>

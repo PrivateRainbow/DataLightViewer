@@ -1,10 +1,9 @@
-﻿using System.IO;
-using Loader.Components;
+﻿using Loader.Components;
 
 namespace Loader.Scanners
 {
     public interface INodeScanner
     {
-        Node Scan(Stream stream);
+        Node Scan();
     }
 }

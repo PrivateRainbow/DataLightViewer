@@ -2,28 +2,37 @@
 using System.Collections.Generic;
 using Loader.Scanners;
 using Loader.Types;
+using System.IO;
 
 namespace Loader.Factories
 {
     public static class ScannerFactory
     {
-        private static readonly Dictionary<SourceSchemaType, INodeScanner> _scanners;
+        private static readonly Dictionary<SourceSchemaType, Type> _scanners;
         
         static ScannerFactory()
         {
-            _scanners = new Dictionary<SourceSchemaType, INodeScanner>
+            _scanners = new Dictionary<SourceSchemaType, Type>
             {
-                {SourceSchemaType.File, new DefaultXmlScanner()},
-                {SourceSchemaType.Database, new DatabaseXmlScanner()}
+                {SourceSchemaType.File, typeof(DefaultXmlScanner)},
+                {SourceSchemaType.Database, typeof(DatabaseXmlScanner)}
             };
         }
 
-        public static INodeScanner MakeScanner(SourceSchemaType type)
+        public static INodeScanner Make(SourceSchemaType type, Stream stream)
         {
             if (!_scanners.ContainsKey(type))
                 throw new ArgumentException($" Such {nameof(type)} was not expected!");
 
-            return _scanners[type];
+            return (INodeScanner) Activator.CreateInstance(_scanners[type], stream);
+        }
+
+        public static INodeScanner Make(SourceSchemaType type, Stream stream, IScanContext context)
+        {
+            if (!_scanners.ContainsKey(type))
+                throw new ArgumentException($" Such {nameof(type)} was not expected!");
+
+            return (INodeScanner)Activator.CreateInstance(_scanners[type], stream, context);
         }
     }
 }

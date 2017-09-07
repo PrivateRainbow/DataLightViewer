@@ -9,11 +9,20 @@ using Loader.Tester.Contexts;
 using Loader.Helpers;
 using DataLightViewer.Mediator;
 using System.Windows;
+using System.Security;
+using DataLightViewer.Helpers;
+using System;
 
 namespace DataLightViewer.ViewModels
 {
     public class ExplorerViewModel : BaseViewModel
     {
+        #region Events
+
+        public event EventHandler ValidationCheckMessage = (obj, e) => {};
+
+        #endregion
+
         #region Private Members
 
         private readonly Window _objectExplorerWindow;
@@ -37,8 +46,8 @@ namespace DataLightViewer.ViewModels
             }
         }
 
-        private string _userPassword;
-        public string UserPassword
+        private SecureString _userPassword;
+        public SecureString UserPassword
         {
             get => _userPassword;
             set
@@ -177,6 +186,8 @@ namespace DataLightViewer.ViewModels
 
         private async void ConnectToServerAsync(CancellationToken token)
         {
+            ValidationCheckMessage.Invoke(null, EventArgs.Empty);
+
             var serverConnection = GetServerConnectionString();
             var connectionTester = new ConnectionTester(new SqlServerConnectionContext(serverConnection));
 
@@ -229,7 +240,11 @@ namespace DataLightViewer.ViewModels
 
                 case AuthenticationType.SqlServer:
                     builder.UserID = UserId;
-                    builder.Password = UserPassword;
+
+                    var enteredPass = UserPassword.SecureStringToString() ?? string.Empty;
+                    if (!string.IsNullOrEmpty(enteredPass))
+                        builder.Password = enteredPass;
+
                     break;
             }
 

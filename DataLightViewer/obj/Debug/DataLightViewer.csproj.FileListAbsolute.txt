@@ -1,0 +1,13 @@
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\DataLightViewer.csprojResolveAssemblyReference.cache
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Styles\Buttons.baml
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Styles\Colors.baml
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Styles\Controls.baml
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Styles\Fonts.baml
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\App.baml
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Controls\SearchTreeViewItemBox.g.cs
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Views\Main\MainWindow.g.cs
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Views\ObjectExplorerWindow.g.cs
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\App.g.cs
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\GeneratedInternalTypeHelper.g.cs
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\DataLightViewer_MarkupCompile.cache
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\DataLightViewer_MarkupCompile.lref

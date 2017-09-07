@@ -48,6 +48,8 @@ namespace DataLightViewer.ViewModels
                 if (ReferenceEquals(_searchText, value))
                     return;
 
+                _filteredNodeEnumerator = null;
+
                 _searchText = value;
                 OnPropertyChanged(nameof(SearchText));
             }
@@ -92,6 +94,8 @@ namespace DataLightViewer.ViewModels
         private void InitializeFromProjectFile(NodeMemento memento)
         {
             _rootNode = memento.NodeViewModel;
+
+            SearchText = string.Empty;
             Items = new ObservableCollection<NodeViewModel>(new List<NodeViewModel> { _rootNode });
         }
 
@@ -106,7 +110,7 @@ namespace DataLightViewer.ViewModels
             get {
                 return new RelayCommand(() => {
                     SearchText = string.Empty;
-                    _filteredNodeEnumerator.Dispose();
+                    _filteredNodeEnumerator = null;
                 });
             }
         }
@@ -114,9 +118,9 @@ namespace DataLightViewer.ViewModels
         private class SearchNodeTreeCommand : ICommand
         {
             private readonly NodeTreeViewModel _nodeTree;
-            public SearchNodeTreeCommand(NodeTreeViewModel familyTree)
+            public SearchNodeTreeCommand(NodeTreeViewModel nodeTree)
             {
-                _nodeTree = familyTree;
+                _nodeTree = nodeTree;
             }
 
             #region Implementation
@@ -156,7 +160,7 @@ namespace DataLightViewer.ViewModels
         {
             var searchFilter = NodeSearchFilters.GetFilterBySearchType(SearchFilterType.ByName);
 
-            var matches = Find(searchFilter, _rootNode, _searchText);
+            var matches = Find(searchFilter, _rootNode, SearchText);
             _filteredNodeEnumerator = matches.GetEnumerator();
 
             if (!_filteredNodeEnumerator.MoveNext())
