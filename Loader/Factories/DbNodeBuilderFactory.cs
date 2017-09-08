@@ -13,7 +13,8 @@ namespace Loader.Factories
             DbNodeBuilders = new Dictionary<DbNodeBuilderType, BaseDbNodeBuilder>
             {
                 {DbNodeBuilderType.Bulk, new BulkDbNodeBuilder()},
-                {DbNodeBuilderType.Lazy, new LazyDbNodeBuilder()}
+                {DbNodeBuilderType.Lazy, new LazyDbNodeBuilder()},
+                {DbNodeBuilderType.PartialLazy, new BunchLazyDbNodeBuilder()}
             };
         }
 

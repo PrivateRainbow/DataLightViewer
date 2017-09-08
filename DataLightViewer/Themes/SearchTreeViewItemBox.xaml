@@ -11,10 +11,10 @@
 
     </ResourceDictionary.MergedDictionaries>
 
-    <Style TargetType="{x:Type local:SearchTreeViewItemBox}">
+    <Style TargetType="{x:Type local:SearchTreeViewItemControl}">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:SearchTreeViewItemBox}">
+                <ControlTemplate TargetType="{x:Type local:SearchTreeViewItemControl}">
                     <Border 
                         Margin="5 5 0 5"
                         Background="{TemplateBinding Background}">
@@ -37,23 +37,23 @@
 
                                 <TextBox Grid.Column="0" 
                                          x:Name="SearchTextBox"                 
-                                         Style="{StaticResource SearchNodeTextBox}"
+                                         Style="{StaticResource SearchNodeTextBox}"    
                                          Template="{StaticResource PlaceholderTextBoxTemplate}"
                                          Tag="Enter name for searching ..."
-                                         Text="{TemplateBinding SearchText}"
+                                         Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SearchText, UpdateSourceTrigger=PropertyChanged}"
                                          /> 
 
                                  <Button Grid.Column="1"
-                                        x:Name="ClearFilter"
                                         Content="X"
+                                        MinWidth="20"                                         
                                         ClickMode="Press"
-                                        MinWidth="20"
+                                        Command="{TemplateBinding ClearCommand}"
                                         Style="{StaticResource DefaultButton}"
                                         />
 
                                 <Button Grid.Column="2"
                                         Content="Find"
-                                        Command="{Binding SearchCommand}"
+                                        Command="{TemplateBinding SearchCommand}"
                                         MinWidth="45"                        
                                         Style="{StaticResource DefaultButton}"
                                         >

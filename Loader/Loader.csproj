@@ -51,6 +51,10 @@
     <Compile Include="Factories\SqlBuilderFactory.cs" />
     <Compile Include="Factories\SqlNodeBuilderFactory.cs" />
     <Compile Include="Factories\TraversalFactory.cs" />
+    <Compile Include="ProjectFileType.cs" />
+    <Compile Include="Scanners\Contexts\IScanContext.cs" />
+    <Compile Include="Scanners\Contexts\XmlNodeValidationContext.cs" />
+    <Compile Include="Services\Builders\BunchLazyDbNodeBuilder.cs" />
     <Compile Include="Tester\ConnectionTester.cs" />
     <Compile Include="Helpers\NodeHelper.cs" />
     <Compile Include="Helpers\PredicateHelper.cs" />
@@ -61,7 +65,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scanners\DatabaseXmlScanner.cs" />
     <Compile Include="Scanners\DefaultXmlScanner.cs" />
-    <Compile Include="Scanners\IScanner.cs" />
+    <Compile Include="Scanners\INodeScanner.cs" />
     <Compile Include="Searchers\NodeSearchConfig.cs" />
     <Compile Include="Searchers\NodeSearchContext.cs" />
     <Compile Include="Searchers\NodeSearcher.cs" />

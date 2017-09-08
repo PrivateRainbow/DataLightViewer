@@ -7,7 +7,7 @@ using System;
 
 namespace Loader.Services.Builders
 {
-    public sealed class LazyDbNodeBuilder : BaseDbNodeBuilder
+    public class LazyDbNodeBuilder : BaseDbNodeBuilder
     {
         #region Init
 
@@ -179,7 +179,7 @@ namespace Loader.Services.Builders
 
         #region Helpers
 
-        private static List<Node> GetDatabaseBundle()
+        protected virtual List<Node> GetDatabaseBundle()
         {
             return new List<Node>
             {
@@ -189,7 +189,7 @@ namespace Loader.Services.Builders
             };
         }
 
-        private static List<Node> GetTableBundle()
+        protected virtual List<Node> GetTableBundle()
         {
             return new List<Node>
             {
@@ -200,7 +200,7 @@ namespace Loader.Services.Builders
             };
         }
 
-        private static List<Node> GetViewBundle()
+        protected virtual List<Node> GetViewBundle()
         {
             return new List<Node>
             {
@@ -209,7 +209,7 @@ namespace Loader.Services.Builders
             };
         }
 
-        private static List<Node> GetProcedureBundle()
+        protected virtual List<Node> GetProcedureBundle()
         {
             return new List<Node>
             {

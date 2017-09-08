@@ -29,12 +29,13 @@ namespace DataLightViewer.ViewModels
         private static readonly BaseDbNodeBuilder DbNodeBuilder;
         private static readonly SqlNodeBuilder SqlNodeBuilder;
 
+        private string _name;
+        private string _sqlScript;
 
         private Node _node;
         private NodeViewModel _selectedItem;
         private ObservableCollection<NodeViewModel> _children;
 
-        private string _name;
         private bool _isExpandable;
         private bool _isExpanded;
         private bool _isSelected;
@@ -53,6 +54,20 @@ namespace DataLightViewer.ViewModels
                 _name = value;
             }
         }
+
+        public string Script
+        {
+            get { return _sqlScript; }
+            set
+            {
+                if (ReferenceEquals(_sqlScript, value))
+                    return;
+                _sqlScript = value;
+
+                OnPropertyChanged(nameof(Script));
+            }
+        }
+
         public string Content { get; }
         public NodeViewModel Parent { get; }
         public DbSchemaObjectType Type { get; }
@@ -83,7 +98,6 @@ namespace DataLightViewer.ViewModels
                 }
             }
         }
-
         public bool IsExpanded
         {
             get => _isExpanded;
@@ -94,20 +108,18 @@ namespace DataLightViewer.ViewModels
                     _selectedItem = this;
                     _isExpanded = value;
 
-                    if (HasArtificialChild)
-                        ExpandAsync();
+                    if (ChildrenDownloaded)
+                        return;
 
+                    ExpandAsync();
                     OnPropertyChanged(nameof(IsExpanded));
                 }
 
                 if (_isExpanded && Parent != null)
                     Parent.IsExpanded = true;
-
             }
         }
-
         public bool IsExpandable => _isExpandable;
-
         public bool HasArtificialChild => Children.Count == 1 && Children[0] == ArtificialChild;
         public bool ChildrenDownloaded => Children.Count > 0 && !Children.Contains(ArtificialChild);
 
@@ -125,7 +137,7 @@ namespace DataLightViewer.ViewModels
 
         static NodeViewModel()
         {
-            DbNodeBuilder = DbNodeBuilderFactory.Make(DbNodeBuilderType.Lazy, App.ServerConnectionString);
+            DbNodeBuilder = DbNodeBuilderFactory.Make(DbNodeBuilderType.PartialLazy, App.ServerConnectionString);
             SqlNodeBuilder = new SqlNodeBuilder(SqlNodeBuilderFactory.Make(SqlNodeBuilderType.TransactSql));
         }
 
@@ -158,29 +170,28 @@ namespace DataLightViewer.ViewModels
             Name = NodeContentPresenter.GetName(_node);
             _isExpandable = NodeContentPresenter.CanBeExpanded(_node);
 
-            _children = new ObservableCollection<NodeViewModel>();
-
             if (lazyLoadChildren)
                 SetArtificalNode();
             else
             {
                 var children = _node.Children.Select(n => new NodeViewModel(n, parent: this, lazyLoadChildren: false));
-                Children = new ObservableCollection<NodeViewModel>(children);
+
+                if (children.Count() > 0)
+                    Children = new ObservableCollection<NodeViewModel>(children);
+                else
+                    SetArtificalNode();
             }
 
-            BuildSqlCommand = new RelayCommand(async () => await BuildSqlAsync());
+            BuildSqlCommand = new RelayCommand(BuildSqlAsync);
             RefreshCommand = new RelayCommand(Refresh);
         }
 
         #endregion
 
         #region Tasks
-
+     
         private void ExpandAsync()
         {
-            if (ChildrenDownloaded)
-                return;
-
             Children.Clear();
 
             var context = new BuildContext
@@ -190,46 +201,61 @@ namespace DataLightViewer.ViewModels
             };
 
             LogWrapper.WriteInfo($"Loading data for {_selectedItem._node.Name}", "Loading ...");
-            Task.Run(() => DbNodeBuilder.MakeNode(context)).ContinueWith(pr => InitializeChildren(pr.Result));
+
+            try
+            {
+                Task.Run(() => DbNodeBuilder.MakeNode(context)).ContinueWith(pr => InitializeChildren(pr.Result));
+            }
+            catch(Exception ex)
+            {
+                Refresh();
+
+                LogWrapper.WriteError("Server is not responding.", ex, "Can not load data from server.");
+                MessageBox.Show("Server is not responding.", "DataToolsLight", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
-        private Task BuildSqlAsync()
+        private void BuildSqlAsync()
         {
             var message = $"Building sql-script for {_selectedItem._node.Name}";
 
-            LogWrapper.WriteInfo(message, message);
+            LogWrapper.WriteInfo(message, message);            
 
-            return Task.Run(() => SqlNodeBuilder.BuildScript(_selectedItem._node))
+            if(!string.IsNullOrEmpty(Script))
+            {
+                SendSqlScript(Script);
+                return;
+            }
+
+            Task.Run(() => SqlNodeBuilder.BuildScript(_selectedItem._node))
                 .ContinueWith(pr =>
                 {
                     try
                     {
-                        SendSqlScript(pr.Result);
+                        Script = pr.Result;
+                        SendSqlScript(Script);
                     }
                     catch (Exception ex)
                     {
-                        // Update UI-state
                         Refresh();
 
-                        LogWrapper.WriteError("Server is not responding.", ex, "Can not load data from server.");
-                        MessageBox.Show("Server is not responding.", "Error");
+                        LogWrapper.WriteError("Sql construction error.", ex, "Sql-script construction failed.");
+                        MessageBox.Show("An error has occurred during SQL construction", "DataToolsLight",MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 });
         }
 
         private void Refresh()
         {
-            //collapse current
+            CleanCashedData();
             IsExpanded = false;
-
-            // clear childrent of current NodeVM
-            Children.Clear();
-
-            // clear inner data in cashed node
-            _selectedItem._node.Children.Clear();
-
-            // make it available for further expand
             SetArtificalNode();
+        }
+
+        private void CleanCashedData()
+        {
+            Children.Clear();
+            _selectedItem._node.Children.Clear();
         }
 
         #endregion
@@ -239,9 +265,9 @@ namespace DataLightViewer.ViewModels
         private void InitializeChildren(List<Node> children)
         {
             children.ForEach(ch => _selectedItem._node.Add(ch));
-            Children = new ObservableCollection<NodeViewModel>(children.Select(c => new NodeViewModel(c, parent: this, lazyLoadChildren: true)));
+            Children = new ObservableCollection<NodeViewModel>(children.Select(c => new NodeViewModel(c, parent: this, lazyLoadChildren: false)));
 
-            LogWrapper.WriteInfo($"Data for {_selectedItem._node.Name} was downloaded");
+            LogWrapper.WriteInfo($"Data for {_selectedItem._node.Name} were downloaded");
         }
 
         private void SendSqlScript(string script)
@@ -256,7 +282,7 @@ namespace DataLightViewer.ViewModels
         {
             Children = new ObservableCollection<NodeViewModel>();
 
-            if (_isExpandable)
+            if (IsExpandable)
                 Children.Add(ArtificialChild);
         }
 

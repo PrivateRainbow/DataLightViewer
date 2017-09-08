@@ -30,7 +30,8 @@ namespace Loader.Types
     public enum DbNodeBuilderType
     {
         Bulk,
-        Lazy
+        Lazy,
+        PartialLazy
     }
 
     public enum DbSchemaObjectType

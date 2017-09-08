@@ -1,0 +1,4 @@
+C:\Users\myronenko.v\Documents\Visual Studio 2017\Projects\DataToolsLight\Loader\bin\Release\Loader.dll
+C:\Users\myronenko.v\Documents\Visual Studio 2017\Projects\DataToolsLight\Loader\bin\Release\Loader.pdb
+C:\Users\myronenko.v\Documents\Visual Studio 2017\Projects\DataToolsLight\Loader\obj\Release\Loader.dll
+C:\Users\myronenko.v\Documents\Visual Studio 2017\Projects\DataToolsLight\Loader\obj\Release\Loader.pdb

@@ -12,9 +12,7 @@ namespace Loader.Serializers
 
         public DatabaseXmlNodeSerializer(TextWriter writer)
         {
-            if(writer == null)
-                throw new ArgumentNullException($"{nameof(writer)}");
-            _textWriter = writer;
+            _textWriter = writer ?? throw new ArgumentNullException($"{nameof(writer)}");
         }
 
         public void Serialize(Node node)

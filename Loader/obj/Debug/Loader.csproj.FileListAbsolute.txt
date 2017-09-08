@@ -1,5 +1,5 @@
-E:\Ezra Klimt\Git\master\Loader\bin\Debug\Loader.dll
-E:\Ezra Klimt\Git\master\Loader\bin\Debug\Loader.pdb
-E:\Ezra Klimt\Git\master\Loader\obj\Debug\Loader.csprojResolveAssemblyReference.cache
-E:\Ezra Klimt\Git\master\Loader\obj\Debug\Loader.dll
-E:\Ezra Klimt\Git\master\Loader\obj\Debug\Loader.pdb
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\Loader\bin\Debug\Loader.dll
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\Loader\bin\Debug\Loader.pdb
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\Loader\obj\Debug\Loader.dll
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\Loader\obj\Debug\Loader.pdb
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\Loader\obj\Debug\Loader.csprojResolveAssemblyReference.cache

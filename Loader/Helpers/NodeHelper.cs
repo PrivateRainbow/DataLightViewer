@@ -48,5 +48,21 @@ namespace Loader.Helpers
             return objectId;
         }
 
+        public static string GetId(this Node node)
+        {
+            var parentNodes = new HashSet<string>
+            {
+                DbSchemaConstants.Table,
+                DbSchemaConstants.View,
+                DbSchemaConstants.Procedure
+            };
+
+            if (!parentNodes.Contains(node.Name))
+                throw new ArgumentNullException($"{nameof(node.Name)}");
+
+            return node.Attributes[SqlQueryConstants.ObjectIdLiteral];
+        }
+
+
     }
 }

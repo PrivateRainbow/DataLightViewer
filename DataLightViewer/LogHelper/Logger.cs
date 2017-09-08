@@ -8,7 +8,7 @@ namespace DataLightViewer.LogHelper
         public static readonly ILog Log = LogManager.GetLogger("DataToolsLightLogger");
         static Logger()
         {
-            XmlConfigurator.Configure();
+            XmlConfigurator.Configure();       
         }
     }
 }

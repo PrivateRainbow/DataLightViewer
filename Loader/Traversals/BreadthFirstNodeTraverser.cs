@@ -27,9 +27,11 @@ namespace Loader.Traversals
                 {
                     if (condition(child))
                         return child;
+
                     queue.Enqueue(child);
                 }
             }
+
             return null;
         }
     }
