@@ -51,10 +51,10 @@
     <Compile Include="Factories\SqlBuilderFactory.cs" />
     <Compile Include="Factories\SqlNodeBuilderFactory.cs" />
     <Compile Include="Factories\TraversalFactory.cs" />
-    <Compile Include="ProjectFileType.cs" />
     <Compile Include="Scanners\Contexts\IScanContext.cs" />
     <Compile Include="Scanners\Contexts\XmlNodeValidationContext.cs" />
-    <Compile Include="Services\Builders\BunchLazyDbNodeBuilder.cs" />
+    <Compile Include="Services\Builders\SlimDbNodeBuilder.cs" />
+    <Compile Include="Services\Types\Contexts\ParentContext.cs" />
     <Compile Include="Tester\ConnectionTester.cs" />
     <Compile Include="Helpers\NodeHelper.cs" />
     <Compile Include="Helpers\PredicateHelper.cs" />
@@ -79,7 +79,7 @@
     <Compile Include="Services\Factories\ISqlNodeBuildFactory.cs" />
     <Compile Include="Services\Helpers\SqlNodeBuilder.cs" />
     <Compile Include="Services\Helpers\SqlNodeTypeResolver.cs" />
-    <Compile Include="Services\Types\BuildContext.cs" />
+    <Compile Include="Services\Types\Contexts\BuildContext.cs" />
     <Compile Include="Services\Types\SqlQueries.cs" />
     <Compile Include="Tester\Contexts\IDbConnectionContext.cs" />
     <Compile Include="Tester\Contexts\SqlServerConnectionContext.cs" />

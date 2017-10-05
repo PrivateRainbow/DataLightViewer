@@ -65,19 +65,85 @@ namespace DataLightViewer {
         ///  &lt;xs:element name=&quot;Server&quot;&gt;
         ///    &lt;xs:complexType&gt;
         ///      &lt;xs:sequence&gt;
-        ///        &lt;xs:element name=&quot;Databases&quot;&gt;
-        ///          &lt;xs:complexType&gt;
+        ///        &lt;xs:element name=&quot;Database&quot; maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot;&gt;
+        ///          &lt;xs:complexType mixed=&quot;true&quot;&gt;
         ///            &lt;xs:sequence&gt;
-        ///              &lt;xs:element name=&quot;Database&quot;&gt;
+        ///              &lt;xs:element name=&quot;Tables&quot; minOccurs=&quot;0&quot;&gt;
         ///                &lt;xs:complexType&gt;
         ///                  &lt;xs:sequence&gt;
-        ///                    &lt;xs:element name=&quot;Tables&quot;&gt;
-        ///                      &lt;xs:complexType&gt;
-        ///                        [rest of string was truncated]&quot;;.
+        ///                    &lt;xs:element name=&quot;Table&quot; maxOcc [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DataToolsLight_Data {
             get {
                 return ResourceManager.GetString("DataToolsLight_Data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;xs:schema attributeFormDefault=&quot;unqualified&quot; elementFormDefault=&quot;qualified&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+        ///  &lt;xs:element name=&quot;Server&quot;&gt;
+        ///    &lt;xs:complexType&gt;
+        ///      &lt;xs:sequence&gt;
+        ///        &lt;xs:element name=&quot;Database&quot; maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot;&gt;
+        ///          &lt;xs:complexType mixed=&quot;true&quot;&gt;
+        ///            &lt;xs:sequence&gt;
+        ///              &lt;xs:element name=&quot;Tables&quot; minOccurs=&quot;0&quot;&gt;
+        ///                &lt;xs:complexType&gt;
+        ///                  &lt;xs:sequence&gt;
+        ///                    &lt;xs:element name=&quot;Table&quot; maxOcc [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DataToolsLight_Data_Ext {
+            get {
+                return ResourceManager.GetString("DataToolsLight_Data_Ext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;xs:schema attributeFormDefault=&quot;unqualified&quot; elementFormDefault=&quot;qualified&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+        ///  &lt;xs:element name=&quot;Server&quot;&gt;
+        ///    &lt;xs:complexType&gt;
+        ///      &lt;xs:sequence&gt;
+        ///        &lt;xs:element name=&quot;Database&quot; maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot;&gt;
+        ///          &lt;xs:complexType&gt;
+        ///            &lt;xs:sequence&gt;
+        ///              &lt;xs:element name=&quot;DummyChild&quot; minOccurs=&quot;0&quot;&gt;
+        ///                &lt;xs:complexType&gt;
+        ///                  &lt;xs:simpleContent&gt;
+        ///                    &lt;xs:extension base=&quot;xs:string&quot;&gt;
+        ///   [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DataToolsLight_UI {
+            get {
+                return ResourceManager.GetString("DataToolsLight_UI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;xs:schema attributeFormDefault=&quot;unqualified&quot; elementFormDefault=&quot;qualified&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+        ///  &lt;xs:element name=&quot;Server&quot;&gt;
+        ///    &lt;xs:complexType&gt;
+        ///      &lt;xs:sequence&gt;
+        ///        &lt;xs:element name=&quot;Database&quot; maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot;&gt;	
+        ///          &lt;xs:complexType&gt;
+        ///            &lt;xs:sequence&gt;			  
+        ///              &lt;xs:element name=&quot;Tables&quot; minOccurs=&quot;0&quot;&gt;
+        ///                &lt;xs:complexType&gt;
+        ///                  &lt;xs:sequence&gt;												  
+        ///                    &lt;xs:element name=&quot;Table&quot; [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DataToolsLight_UI_EXT {
+            get {
+                return ResourceManager.GetString("DataToolsLight_UI_EXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] t_sql_syntax {
+            get {
+                object obj = ResourceManager.GetObject("t_sql_syntax", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

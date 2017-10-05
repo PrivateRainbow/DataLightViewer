@@ -14,7 +14,7 @@ namespace Loader.Factories
             {
                 {DbNodeBuilderType.Bulk, new BulkDbNodeBuilder()},
                 {DbNodeBuilderType.Lazy, new LazyDbNodeBuilder()},
-                {DbNodeBuilderType.PartialLazy, new BunchLazyDbNodeBuilder()}
+                {DbNodeBuilderType.Slim, new SlimDbNodeBuilder()}
             };
         }
 

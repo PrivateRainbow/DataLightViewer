@@ -1,6 +1,9 @@
 ﻿using DataLightViewer.Models;
 using System.Windows;
 using System.Windows.Forms;
+using System;
+using System.Text.RegularExpressions;
+using System.IO;
 
 namespace DataLightViewer.Helpers
 {
@@ -14,13 +17,14 @@ namespace DataLightViewer.Helpers
     {
         #region Data
 
-        private static readonly DialogBundle _dialogTextBundle = new DialogBundle { ExtentionByDefault = ".txt", Filter = "Text documents (.txt)|*.txt" };
-        private static readonly DialogBundle _dialogProjectBundle = new DialogBundle { ExtentionByDefault = ".dtml", Filter = "Data Tools Light project (.dtml)|*.dtml" };
+        public static readonly DialogBundle DialogSqlBundle = new DialogBundle { ExtentionByDefault = ".sql", Filter = "Sql Files (*.sql)|*.sql|All Files (*.*)|*.*" };
+        public static readonly DialogBundle DialogTextBundle = new DialogBundle { ExtentionByDefault = ".txt", Filter = "Text documents (.txt)|*.txt" };
+        public static readonly DialogBundle DialogProjectBundle = new DialogBundle { ExtentionByDefault = ".dtml", Filter = "Data Tools Light project (.dtml)|*.dtml" };
 
         #endregion
 
-        public static string GetFileNameFromSaveTextDialog() => GetFileNameFromSaveDialog(_dialogTextBundle);
-        public static string GetFileNameFromSaveProjectDialog() => GetFileNameFromSaveDialog(_dialogProjectBundle);
+        public static string GetFileNameFromSaveTextDialog() => GetFileNameFromSaveDialog(DialogTextBundle);
+        public static string GetFileNameFromSaveProjectDialog() => GetFileNameFromSaveDialog(DialogProjectBundle);
 
         #region Helpers
 
@@ -72,6 +76,31 @@ namespace DataLightViewer.Helpers
             }
         }
 
+        public static bool ConfirmEnteredServerConnection()
+        {
+            var result = System.Windows.MessageBox.Show("The connection to server has changed. Would you like to continue with new connection for the current project !?",
+                                                        "DataToolsLight",
+                                                        MessageBoxButton.YesNo,
+                                                        MessageBoxImage.Question);
+            switch(result)
+            {
+                case MessageBoxResult.Yes:
+                    return true;
+                case MessageBoxResult.No:
+                    return false;
+
+                default:
+                    throw new ArgumentException($"{nameof(result)}");                    
+            }
+        }
+
+        public static bool IsValidFilename(string testName)
+        {
+            Regex unspupportedRegex = new Regex("(^(PRN|AUX|NUL|CON|COM[1-9]|LPT[1-9]|(\\.+)$)(\\..*)?$)|(([‌​\\x00-\\x1f\\\\?*:\"‌​;‌​|/<>])+)|([\\. ]+)", RegexOptions.IgnoreCase);
+            if (unspupportedRegex.IsMatch(testName)) { return false; };
+
+            return true;
+        }
         #endregion 
     }
 }

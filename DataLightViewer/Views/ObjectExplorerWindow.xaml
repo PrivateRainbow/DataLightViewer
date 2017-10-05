@@ -8,7 +8,10 @@
         mc:Ignorable="d"
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterScreen"
-        Height="300" Width="350">
+        WindowState="Normal"
+        ResizeMode="NoResize"
+        Height="300" Width="350"        
+        Title="Connect to server">
 
     <StackPanel Margin="10">
         
@@ -32,8 +35,9 @@
                           IsTextSearchCaseSensitive="False" 
                           StaysOpenOnEdit="True"
                           ItemsSource="{Binding Servers}"
-                          Text="{Binding SelectedServerConnection, Mode=TwoWay}">
+                          Text="{Binding SelectedServerConnection, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
             <ComboBoxItem IsSelected="True">.\SQLEXPRESS</ComboBoxItem>
+            <ComboBoxItem>vm-gbmssql01\SQLSRV2012</ComboBoxItem>
         </ComboBox>
 
         <ComboBox HorizontalAlignment="Stretch" 
@@ -47,7 +51,7 @@
         </ComboBox>
 
         <TextBox                  
-                 Text="{Binding UserId, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
+                 Text="{Binding UserId, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                  Style="{StaticResource LoginTextBoxWithPlaceholder}"
                  Template="{StaticResource PlaceholderTextBoxTemplate}"
                  IsEnabled="{Binding AuthorizedWithCredentials}"
@@ -79,7 +83,7 @@
             <Button
                     Margin="10"
                     Grid.Column ="0" Height="40"
-                    IsEnabled="{Binding IsServerConnectionEntered}"
+                    IsEnabled="{Binding IsServerConnectionEntered}"                    
                     Command="{Binding ConnectCommand}"
                     Style="{StaticResource LoginConnectButton}"   
                     Content="Go">

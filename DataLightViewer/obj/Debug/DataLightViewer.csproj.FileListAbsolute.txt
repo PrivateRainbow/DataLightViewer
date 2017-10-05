@@ -1,13 +1,76 @@
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\DataLightViewer.csprojResolveAssemblyReference.cache
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\Styles\Colors.baml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\Styles\Fonts.baml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\App.baml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\Views\Main\MainWindow.g.cs
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\Views\ObjectExplorerWindow.g.cs
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\App.g.cs
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\DataLightViewer_MarkupCompile.cache
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\DataLightViewer_MarkupCompile.lref
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\bin\Debug\DataLightViewer.exe.config
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\bin\Debug\DataLightViewer.exe
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\bin\Debug\DataLightViewer.pdb
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\bin\Debug\Loader.dll
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\bin\Debug\log4net.dll
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\bin\Debug\Microsoft.Expression.Interactions.dll
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\bin\Debug\Loader.pdb
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\bin\Debug\log4net.xml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\bin\Debug\Microsoft.Expression.Interactions.xml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\bin\Debug\System.Windows.Interactivity.xml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\Themes\Generic.baml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\Styles\Buttons.baml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\Styles\Controls.baml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\Styles\Texts.baml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\Styles\TreeView.baml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\Themes\SearchTreeViewItemBox.baml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\Views\Main\MainWindow.baml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\Views\ObjectExplorerWindow.baml
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\DataLightViewer.g.resources
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\DataLightViewer.Properties.Resources.resources
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\DataLightViewer.csproj.GenerateResource.Cache
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\DataLightViewer.exe
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\DataLightViewer.pdb
+C:\Users\myronenko.v\Documents\Visual Studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\DataLightViewer.Resources.resources
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\bin\Debug\ICSharpCode.AvalonEdit.dll
+C:\Users\myronenko.v\documents\visual studio 2017\Projects\DataToolsLight\DataLightViewer\bin\Debug\ICSharpCode.AvalonEdit.xml
+C:\Users\myronenko.v\Documents\Visual Studio 2017\Projects\DataToolsLight\DataLightViewer\obj\Debug\Styles\Menu.baml
+E:\Ezra Klimt\Git\master\DataLightViewer\bin\Debug\DataLightViewer.exe.config
+E:\Ezra Klimt\Git\master\DataLightViewer\bin\Debug\DataLightViewer.exe
+E:\Ezra Klimt\Git\master\DataLightViewer\bin\Debug\DataLightViewer.pdb
+E:\Ezra Klimt\Git\master\DataLightViewer\bin\Debug\ICSharpCode.AvalonEdit.dll
+E:\Ezra Klimt\Git\master\DataLightViewer\bin\Debug\Loader.dll
+E:\Ezra Klimt\Git\master\DataLightViewer\bin\Debug\log4net.dll
+E:\Ezra Klimt\Git\master\DataLightViewer\bin\Debug\Microsoft.Expression.Interactions.dll
+E:\Ezra Klimt\Git\master\DataLightViewer\bin\Debug\System.Windows.Interactivity.dll
+E:\Ezra Klimt\Git\master\DataLightViewer\bin\Debug\Loader.pdb
+E:\Ezra Klimt\Git\master\DataLightViewer\bin\Debug\ICSharpCode.AvalonEdit.xml
+E:\Ezra Klimt\Git\master\DataLightViewer\bin\Debug\log4net.xml
+E:\Ezra Klimt\Git\master\DataLightViewer\bin\Debug\Microsoft.Expression.Interactions.xml
+E:\Ezra Klimt\Git\master\DataLightViewer\bin\Debug\System.Windows.Interactivity.xml
 E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\DataLightViewer.csprojResolveAssemblyReference.cache
 E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Styles\Buttons.baml
 E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Styles\Colors.baml
 E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Styles\Controls.baml
 E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Styles\Fonts.baml
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Themes\Generic.baml
 E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\App.baml
-E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Controls\SearchTreeViewItemBox.g.cs
 E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Views\Main\MainWindow.g.cs
 E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Views\ObjectExplorerWindow.g.cs
 E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\App.g.cs
 E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\GeneratedInternalTypeHelper.g.cs
 E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\DataLightViewer_MarkupCompile.cache
 E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\DataLightViewer_MarkupCompile.lref
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Styles\Menu.baml
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Styles\Texts.baml
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Styles\TreeView.baml
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Themes\SearchTreeViewItemBox.baml
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Views\Main\MainWindow.baml
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\Views\ObjectExplorerWindow.baml
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\DataLightViewer.g.resources
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\DataLightViewer.Properties.Resources.resources
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\DataLightViewer.Resources.resources
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\DataLightViewer.csproj.GenerateResource.Cache
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\DataLightViewer.exe
+E:\Ezra Klimt\Git\master\DataLightViewer\obj\Debug\DataLightViewer.pdb

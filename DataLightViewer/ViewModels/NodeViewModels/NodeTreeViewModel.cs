@@ -11,6 +11,8 @@ using Loader.Types;
 using DataLightViewer.Helpers;
 using DataLightViewer.Commands;
 using DataLightViewer.Filters;
+using DataLightViewer.Models;
+using DataLightViewer.Services;
 
 namespace DataLightViewer.ViewModels
 {
@@ -39,6 +41,17 @@ namespace DataLightViewer.ViewModels
             }
         }
 
+        private bool _isTreeInitialized;
+        public bool IsTreeInitialized
+        {
+            get => _isTreeInitialized;
+            set
+            {
+                _isTreeInitialized = value;
+                OnPropertyChanged(nameof(IsTreeInitialized));
+            }
+        }
+
         private string _searchText;
         public string SearchText
         {
@@ -63,15 +76,16 @@ namespace DataLightViewer.ViewModels
         {
             Messenger.Instance.Register<NodeMemento>(MessageType.OnOpeningProjectFile, nm => InitializeFromProjectFile(nm));
             Messenger.Instance.Register<MainWindowViewModel>(MessageType.OnSavingProjectFile, wvm => InitializeMemento(wvm));
-            Messenger.Instance.Register(MessageType.OnInitializingProjectFile, InitializeFromServerConnection);
+            Messenger.Instance.Register<AppConnectionMode>(MessageType.OnInitializingProjectFile, InitializeFromServerConnection);
 
             SearchCommand = new SearchNodeTreeCommand(this);
         }
 
-        private NodeTreeViewModel(Node node, bool lazyLoadChildren):this()
+
+        private NodeTreeViewModel(Node node, bool lazyLoadChildren) : this()
         {
             _rootNode = new NodeViewModel(node, parent: null, lazyLoadChildren: lazyLoadChildren);
-            Items = new ObservableCollection<NodeViewModel>(new List<NodeViewModel> { _rootNode });         
+            Items = new ObservableCollection<NodeViewModel>(new List<NodeViewModel> { _rootNode });
         }
 
         private void InitializeMemento(MainWindowViewModel sender)
@@ -82,8 +96,11 @@ namespace DataLightViewer.ViewModels
 
         #region Subscription
 
-        private void InitializeFromServerConnection()
+        private void InitializeFromServerConnection(AppConnectionMode connectionMode)
         {
+            if (connectionMode == AppConnectionMode.Reopen)
+                DbConnectionHelper.InvalidateCash();
+
             var serverNode = new Node(DbSchemaConstants.Server);
             serverNode.AttachAttribute(new KeyValuePair<string, string>(SqlQueryConstants.Name, App.ServerConnectionString.GetServerName()));
 
@@ -94,8 +111,9 @@ namespace DataLightViewer.ViewModels
         private void InitializeFromProjectFile(NodeMemento memento)
         {
             _rootNode = memento.NodeViewModel;
-
             SearchText = string.Empty;
+
+            Application.Current.Dispatcher.Invoke(() => Items?.Clear());
             Items = new ObservableCollection<NodeViewModel>(new List<NodeViewModel> { _rootNode });
         }
 
@@ -106,9 +124,12 @@ namespace DataLightViewer.ViewModels
         #region Search 
 
         public ICommand SearchCommand { get; }
-        public ICommand ClearCommand {
-            get {
-                return new RelayCommand(() => {
+        public ICommand ClearCommand
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
                     SearchText = string.Empty;
                     _filteredNodeEnumerator = null;
                 });
@@ -127,18 +148,27 @@ namespace DataLightViewer.ViewModels
 
             event EventHandler ICommand.CanExecuteChanged
             {
-                add { }
-                remove { }
+                add { CommandManager.RequerySuggested += value; }
+                remove { CommandManager.RequerySuggested -= value; }
             }
-            public bool CanExecute(object parameter) => true;
+
+            public bool CanExecute(object parameter) => _nodeTree.CanPerformSearch();
             public void Execute(object parameter) => _nodeTree.PerformSearch();
 
             #endregion
         }
 
+        private bool CanPerformSearch()
+        {
+            return _rootNode != null && !string.IsNullOrEmpty(SearchText) && !string.IsNullOrWhiteSpace(SearchText);
+        }
+
         private void PerformSearch()
         {
-            LogWrapper.WriteInfo($"Searching node with {_searchText} name", "Searching ...");
+            LogWrapper.WriteInfo($"Searching node with {_searchText} name");
+
+            var searchingTask = new ExecutingTask("Searching node ...");
+            TaskExecutionMonitor.AttachMonitoring(searchingTask);
 
             if (_filteredNodeEnumerator == null || !_filteredNodeEnumerator.MoveNext())
                 VerifyMatchingNodeEnumerator();
@@ -148,14 +178,14 @@ namespace DataLightViewer.ViewModels
             if (node == null)
                 return;
 
+            node.IsSelected = true;
             if (node.Parent != null)
                 node.Parent.IsExpanded = true;
 
-            node.IsSelected = true;
-
             LogWrapper.WriteInfo($"Node with such name ({_searchText}) was found!");
+            TaskExecutionMonitor.DetachMonitoring(searchingTask);
         }
-               
+
         private void VerifyMatchingNodeEnumerator()
         {
             var searchFilter = NodeSearchFilters.GetFilterBySearchType(SearchFilterType.ByName);
@@ -165,16 +195,15 @@ namespace DataLightViewer.ViewModels
 
             if (!_filteredNodeEnumerator.MoveNext())
             {
-                LogWrapper.WriteInfo($"Node with such name ({_searchText}) was not found!", "Not found.");
+                LogWrapper.WriteInfo($"Node with such name ({_searchText}) was not found!");
                 MessageBox.Show(
-                    "No matching names were found.",
-                    "Try Again",
+                    "No matching names were found. Try again.",
+                    "DataToolsLight",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information
                     );
             }
         }
-
 
         private static IEnumerable<NodeViewModel> Find(SearchFilter filter, NodeViewModel parent, string searchText)
         {
@@ -183,6 +212,9 @@ namespace DataLightViewer.ViewModels
 
             foreach (var child in parent.Children)
             {
+                if (ReferenceEquals(child, NodeViewModel.ArtificialChild))
+                    continue;
+
                 foreach (var match in Find(filter, child, searchText))
                     yield return match;
             }

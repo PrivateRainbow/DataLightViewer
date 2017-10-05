@@ -8,7 +8,12 @@ namespace DataLightViewer.Commands
         private Action _execute;
         private Predicate<object> _canExecute;
 
-        public event EventHandler CanExecuteChanged = (sender, e) => { };
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
+
         public RelayCommand(Action execute, Predicate<object> canExecute = null)
         {
             _execute = execute;

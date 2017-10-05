@@ -41,9 +41,9 @@
                                          Template="{StaticResource PlaceholderTextBoxTemplate}"
                                          Tag="Enter name for searching ..."
                                          Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SearchText, UpdateSourceTrigger=PropertyChanged}"
-                                         /> 
+                                         />
 
-                                 <Button Grid.Column="1"
+                                <Button Grid.Column="1"
                                         Content="X"
                                         MinWidth="20"                                         
                                         ClickMode="Press"
@@ -63,16 +63,15 @@
 
                             <!-- Tree -->
                             <TreeView Grid.Row="1"
-                                      ItemsSource="{TemplateBinding TreeViewItemsSource}"
-                                          x:Name="MainTreeView">
+                                      ItemsSource="{TemplateBinding TreeViewItemsSource}"                                      
+                                      >
 
                                 <TreeView.ItemTemplate>
-                                    <HierarchicalDataTemplate
-                                        ItemsSource="{Binding Children}">
+                                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                        
                                         <StackPanel Orientation="Horizontal">
 
                                             <StackPanel.ContextMenu>
-
                                                 <ContextMenu>
 
                                                     <MenuItem Header="Refresh" Command="{Binding RefreshCommand}">
@@ -88,13 +87,45 @@
                                                     </MenuItem>
 
                                                 </ContextMenu>
-
                                             </StackPanel.ContextMenu>
 
-                                            <Image Width="20" Margin="3 0 3 3"
-                               Source="{Binding Type,
-                            Converter={x:Static c:HeaderToImageConvertor.Instance}}"/>
-                                            <TextBlock VerticalAlignment="Center" Text="{Binding Content}"/>
+                                            <Image Width="20" 
+                                                   Margin="3 0 3 3"
+                                                   Source="{Binding Image}"/>
+                                            
+                                            <TextBlock VerticalAlignment="Center">
+                                                <Run Text="{Binding Content}"/>
+                                                <Run Text=" "/>
+                                            </TextBlock>
+                                            
+                                            <TextBlock VerticalAlignment="Center">
+                                                
+                                                <Run Text="(" FontWeight="DemiBold"/>
+                                                <Run Text="{Binding ChildrenQuantity}"/>
+                                                <Run Text=")" FontWeight="DemiBold"/>
+                                               
+                                                <TextBlock.Style>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Style.Triggers>
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding ShowChildrenQuantity}" Value="True"/>
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </MultiDataTrigger>
+
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding ShowChildrenQuantity}" Value="False"/>
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter Property="Visibility" Value="Hidden"/>
+                                                            </MultiDataTrigger>
+                                                            
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+
+                                            </TextBlock>
 
                                         </StackPanel>
 

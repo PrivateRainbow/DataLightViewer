@@ -53,6 +53,9 @@ namespace Loader.Services.Helpers
                 ? "NOT NULL"
                 : "NULL";
 
+            if (length == "-1")
+                length = "MAX";
+
             if (presentMode == true)
                 return $"{name} ({type}({length}), {nullable})".TrimEnd(' ');
 

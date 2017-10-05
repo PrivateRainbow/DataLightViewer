@@ -9,7 +9,7 @@ namespace DataLightViewer.Helpers
     public static class DbConnectionHelper
     {
         private static readonly HashSet<string> _highLevelNodes = new HashSet<string> {
-            DbSchemaConstants.Server, DbSchemaConstants.Database, DbSchemaConstants.Databases
+            DbSchemaConstants.Server, DbSchemaConstants.Databases
         };
 
         private static readonly Dictionary<string, string> _databaseConnectionStrings = new Dictionary<string, string>();
@@ -20,7 +20,9 @@ namespace DataLightViewer.Helpers
             if (_highLevelNodes.Contains(node.Name))
                 return App.ServerConnectionString;
 
-            var connectionKey = node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Database).Attributes["name"];
+            var connectionKey = node.Name == DbSchemaConstants.Database 
+                ? node.Attributes["name"] 
+                : node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Database).Attributes["name"];
 
             if (!_databaseConnectionStrings.ContainsKey(connectionKey))
             {
@@ -36,7 +38,7 @@ namespace DataLightViewer.Helpers
         }
 
         public static void InitializeConnections(List<Node> nodes) => nodes.ForEach(n => n.GetConnectionString());
-
+        public static void InvalidateCash() => _databaseConnectionStrings?.Clear();
 
     }
 }

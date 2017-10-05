@@ -4,23 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:b="clr-namespace:DataLightViewer.Behaviors"
         xmlns:controls="clr-namespace:DataLightViewer.Controls"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="DataLightViewer" Height="450" Width="650"
         >
-
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Closing">
-            <i:InvokeCommandAction  Command="{Binding CloseCommand}" />
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
     
     <!--#region Window Content -->
 
     <Grid Background="{StaticResource BackgroundBlueBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -68,7 +63,15 @@
                             <Image Source="/Icons/Menu/save.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                </MenuItem>                
+                </MenuItem>
+                <MenuItem Header="Tools">
+                    <MenuItem Header="Connect to server ..."
+                              Command="{Binding ConnectToServerCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Menu/connector.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
             </Menu>
         </Grid>
 
@@ -77,7 +80,6 @@
         <!--#region Search TreeViewItem Control -->
 
         <controls:SearchTreeViewItemControl
-            x:Name="SearcTVIC"
             Grid.Column="0" 
             Grid.Row="1" 
             Grid.RowSpan="2"
@@ -108,9 +110,9 @@
               Grid.Column="2">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.4*"/>
+                <RowDefinition Height=".35*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="0.6*"/>
+                <RowDefinition Height=".65*"/>
             </Grid.RowDefinitions>
 
             <DataGrid Grid.Row="0"
@@ -127,7 +129,7 @@
             </GridSplitter>
 
             <Grid Grid.Row="2"
-                  Background="White"
+                  Background="{StaticResource ForegroundEditorLineBrush}"
                   Margin="0 0 5 5">
 
                 <Grid.RowDefinitions>
@@ -135,8 +137,12 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Expander Grid.Row="0" Header="Sql-Editor"
-                          Background="{StaticResource BackgroundBlueBrush}">
+                <Expander Grid.Row="0" 
+                          Header="Sql-Editor"
+                          Background="{StaticResource ForegroundWhiteBrush}"
+                          BorderBrush="{StaticResource BackgroundBlueBrush}"
+                          BorderThickness="0 0 0 5"
+                          >
                     <ToolBar
                         Background="Transparent"                        
                         >
@@ -157,12 +163,22 @@
                         </Button>
                     </ToolBar>
                 </Expander>
-                <TextBox
-                    Grid.Row="1"
-                    IsManipulationEnabled="True"                    
-                    Style="{StaticResource SqlEditorTextBox}"
-                    Text="{Binding SqlScriptViewModel.Script}"/>
 
+                <avalonEdit:TextEditor
+                    xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+                    x:Name="AvalongTextEditor"
+                    SyntaxHighlighting="{Binding SyntaxHighlighter, Mode=TwoWay}"
+                    Grid.Row="1"
+                    Style="{StaticResource SqlEditor}">
+                    
+                    <i:Interaction.Behaviors>
+                        <b:AvalonEditBehaviour AvalonContent="{Binding SqlScriptViewModel.Script,
+                                                                       Mode=TwoWay,
+                                                                       UpdateSourceTrigger=PropertyChanged}"/>             
+                    </i:Interaction.Behaviors>                    
+                    
+                </avalonEdit:TextEditor> 
+                
             </Grid>
         </Grid>
 
@@ -175,7 +191,7 @@
                    Grid.ColumnSpan="3"
                    Background="{StaticResource BackgroundStatusBarOrangeBrush}">
             <StatusBarItem>
-                <TextBlock Text="{Binding StatusViewModel.Status}"                           
+                <TextBlock Text="{Binding StatusViewModel.Message}"                           
                        Foreground="{StaticResource ForegroundWhiteBrush}"
                        FontFamily="{StaticResource LatoThin}"
                        FontSize="{StaticResource FontSizeRegular}"

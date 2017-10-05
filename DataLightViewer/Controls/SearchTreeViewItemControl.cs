@@ -44,7 +44,7 @@ namespace DataLightViewer.Controls
         {
             get { return (string)GetValue(SearchTextProperty); }
             set { SetValue(SearchTextProperty, value); }
-        }
+        }      
 
         public ICommand SearchCommand
         {

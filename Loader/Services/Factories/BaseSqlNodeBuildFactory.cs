@@ -2,6 +2,7 @@
 using Loader.Components;
 using Loader.Services.Helpers;
 using Loader.Types;
+using System.Collections.Generic;
 
 namespace Loader.Services.Factories
 {
@@ -29,10 +30,15 @@ namespace Loader.Services.Factories
         #region Init
 
         protected DateTime CreationTime;
+        protected HashSet<string> ParentTypes;
 
         protected BaseSqlNodeBuildFactory()
         {
             CreationTime = DateTime.Now;
+            ParentTypes = new HashSet<string>
+            {
+                DbSchemaConstants.Table, DbSchemaConstants.View, DbSchemaConstants.Procedure
+            };
         }
 
         #endregion
@@ -43,9 +49,16 @@ namespace Loader.Services.Factories
         {
             return $@"/****** Object:  {type} {name ?? string.Empty}    Script Date: {CreationTime.ToString()} ******/";
         }
-        protected string GetTableName(Node node)
+
+        protected string WrapInComments(string script)
         {
-            if (node.Name != DbSchemaConstants.Table)
+            return $@"/***** {script} ******/";
+        }
+
+        protected string GetParentName(Node node)
+        {
+            
+            if (!ParentTypes.Contains(node.Name))
                 throw new InvalidOperationException($" Such {node} was not expected!");
             return $"[{node.Attributes[SqlQueryConstants.SchemaName]}].[{node.Attributes[SqlQueryConstants.Name]}]";
         }

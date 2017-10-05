@@ -22,5 +22,17 @@ namespace DataLightViewer.Helpers
                 await sourceStream.WriteAsync(encodedText, 0, encodedText.Length);
             };
         }
+
+
+        public static async Task WriteToFileAsync(this string content, string pathToFile)
+        {
+            if (string.IsNullOrEmpty(content))
+                throw new ArgumentException($"{nameof(content)}");
+            if (string.IsNullOrEmpty(pathToFile))
+                throw new ArgumentException($"{nameof(pathToFile)}");
+
+               using (var writer = File.CreateText(pathToFile))
+                   await writer.WriteAsync(content);
+        }
     }
 }

@@ -7,8 +7,11 @@
 
     <Color x:Key="BackgroundStatusBarOrange">#FF8C00</Color>
     <SolidColorBrush x:Key="BackgroundStatusBarOrangeBrush" Color="{StaticResource BackgroundStatusBarOrange}"/>
-    
-    
+
+    <Color x:Key="ForegroundEditorLineColor">#2B91AF</Color>
+    <SolidColorBrush x:Key="ForegroundEditorLineBrush" Color="{StaticResource ForegroundEditorLineColor}"/>
+
+
     <!-- Expand toggle btn-->
     <Color x:Key="GlyphColor">#FF444444</Color>
     

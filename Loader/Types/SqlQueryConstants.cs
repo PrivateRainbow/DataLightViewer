@@ -3,8 +3,15 @@
     public static class SqlQueryConstants
     {
         #region Params
-        public const string ObjectIdParam = "@table_object_id";
-        public const string ObjectIdLiteral = "object_id";
+        public const string ParentIdParam = "@parent_object_id";
+        public const string ObjectIdParamLiteral = "object_id";
+
+        public const string SelfIdParam = "@self_object_id";
+        public const string SelfIdParamLiteral = "self_id";
+
+        public const string IdentifyParam = "@identify_param";
+        public const string IdentifyParamLiteral = "identify_param";
+
         #endregion
 
         #region Common
@@ -27,11 +34,12 @@
         public const string TableName = "tableName";
         public const string SchemaName = "schemaName";
         public const string ColumnName = "columnName";
+        public const string Columns = "columns";
         #endregion
 
         public const string PkIsDescendingKey = "isDescendingKey";
-        public const string IsUnique = "isUnique";
-        public const string IsPrimary = "isPrimary";
+        public const string IsUnique = "is_unique";
+        public const string IsPrimary = "is_primary_key";
         public const string IsForeign = "isForeign";
 
         #region FK
@@ -46,6 +54,15 @@
         #region Constraints
         public const string DcFieldName = "defaultForField";
         public const string UcIgnoreDupKey = "ignoreDuplicationKey";
+        #endregion
+
+        #region Identify
+
+        public const string ColumnId = "column_id";
+        public const string ParameterId = "parameter_id";
+        public const string IndexId = "index_id";
+        public const string IndexColumnId = "index_column_id";
+
         #endregion
     }
 }

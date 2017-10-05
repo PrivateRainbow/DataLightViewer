@@ -6,16 +6,14 @@ namespace DataLightViewer
 {
     public static class LogWrapper
     {       
-        public static void WriteInfo(string logInfo, string statusInfo = null)
+        public static void WriteInfo(string logInfo)
         {
             Logger.Log.Info(logInfo);
-            Messenger.Instance.NotifyColleagues(MessageType.ExecutionStatus, statusInfo);
         }
 
-        public static void WriteError(string logInfo, Exception ex = null, string statusInfo = null)
+        public static void WriteError(string logInfo, Exception ex = null)
         {
             Logger.Log.Error(logInfo, ex);
-            Messenger.Instance.NotifyColleagues(MessageType.ExecutionStatus, statusInfo);
         }
     }
 }

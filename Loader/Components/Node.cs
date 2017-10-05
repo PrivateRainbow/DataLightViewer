@@ -36,6 +36,17 @@ namespace Loader.Components
             Children.Add(node);
         }
 
+        public virtual void Insert(int index, Node node)
+        {
+            if (node == null)
+                throw new ArgumentException($"{nameof(node)} is not valid.");
+            if (node.Parent != null)
+                throw new InvalidOperationException($"{nameof(node)} already has been added.");
+
+            node.Parent = this;
+            Children.Insert(index, node);
+        }
+
         public virtual void Remove(Node node)
         {
             if (node == null)

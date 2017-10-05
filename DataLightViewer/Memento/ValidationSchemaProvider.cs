@@ -18,7 +18,7 @@ namespace DataLightViewer.Memento
                     break;
 
                 case ProjectFileType.UI:
-                    schemaUri = Resources.DataToolsLight_UI_EXT;
+                    schemaUri = Resources.DataToolsLight_UI;
                     break;
             }
 

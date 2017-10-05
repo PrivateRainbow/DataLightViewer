@@ -39,7 +39,7 @@
         public const string ForeignKeyTypeLiteral = "F";
         public const string DefaultConstraintTypeLiteral = "D";
         public const string CheckedConstraintTypeLiteral = "C";
-        public const string UniqueConstraintTypeLiteral = "UC";
+        public const string UniqueConstraintTypeLiteral = "UQ";
 
         #endregion
     }

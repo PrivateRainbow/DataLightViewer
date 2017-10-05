@@ -17,10 +17,12 @@ namespace Loader.Services.Factories
 
             var scriptBuilder = new StringBuilder();
             scriptBuilder.AppendLine(GetCaptionForDbObject(DatabaseHeaderLiteral, node.Name));
-            var pattern = $"CREATE DATABASE {node.Name};";
+
+            var name = node.Attributes[SqlQueryConstants.Name];
+            var pattern = $"CREATE DATABASE {name};";
             scriptBuilder.AppendLine(pattern);
             scriptBuilder.AppendLine(GoLiteral);
-            scriptBuilder.AppendLine($"{UseLiteral} {node.Name};");
+            scriptBuilder.AppendLine($"{UseLiteral} {name};");
 
             return scriptBuilder.ToString();
         }
@@ -37,7 +39,7 @@ namespace Loader.Services.Factories
 
             var scriptBuilder = new StringBuilder();
 
-            var tableName = GetTableName(node);
+            var tableName = GetParentName(node);
             var pattern = $"CREATE TABLE {tableName} (";
 
             if(!node.HasChildren())
@@ -64,9 +66,9 @@ namespace Loader.Services.Factories
 
                 for (var i = 0; i < count; i++)
                     if (i != count - 1)
-                        scriptBuilder.AppendLine(BuildColumn(cols[i], creationInsideParentTable: true) + ',');
+                        scriptBuilder.AppendLine(BuildColumn(cols[i], creationInsideParent: true) + ',');
                     else
-                        scriptBuilder.AppendLine(BuildColumn(cols[i], creationInsideParentTable: true));
+                        scriptBuilder.AppendLine(BuildColumn(cols[i], creationInsideParent: true));
             }
 
             scriptBuilder.AppendLine(");");
@@ -98,11 +100,16 @@ namespace Loader.Services.Factories
                 throw new ArgumentNullException($"{nameof(node)}");
             if (node.Name != DbSchemaConstants.View)
                 throw new InvalidOperationException($" Such {node} was not expected!");
-            if (!node.HasValue())
-                throw new InvalidOperationException($" Such {node} must have a Value!");
 
             var scriptBuilder = new StringBuilder();
             scriptBuilder.AppendLine(GetCaptionForDbObject(ViewHeaderLiteral));
+
+            if (!node.HasValue())
+            {
+                scriptBuilder.AppendLine(WrapInComments("Object is encrypted by database server."));
+                return scriptBuilder.ToString();
+            }
+
             scriptBuilder.AppendLine(node.Value);
             scriptBuilder.AppendLine(GoLiteral);
 
@@ -113,18 +120,23 @@ namespace Loader.Services.Factories
             if (node == null)
                 throw new ArgumentNullException($"{nameof(node)}");
             if (node.Name != DbSchemaConstants.Procedure)
-                throw new InvalidOperationException($" Such {node} was not expected!");
-            if (!node.HasValue())
-                throw new InvalidOperationException($" Such {node} must have a Value!");
+                throw new InvalidOperationException($" Such {node} was not expected!");               
 
             var scriptBuilder = new StringBuilder();
             scriptBuilder.AppendLine(GetCaptionForDbObject(ProcedureHeaderLiteral));
+
+            if (!node.HasValue())
+            {
+                scriptBuilder.AppendLine(WrapInComments("Object is encrypted by database server."));
+                return scriptBuilder.ToString();
+            }
+
             scriptBuilder.AppendLine(node.Value);
             scriptBuilder.AppendLine(GoLiteral);
 
             return scriptBuilder.ToString();
         }
-        public override string BuildColumn(Node node, bool creationInsideParentTable = false)
+        public override string BuildColumn(Node node, bool creationInsideParent = false)
         {
             if (node == null)
                 throw new ArgumentNullException($"{nameof(node)}");
@@ -136,11 +148,12 @@ namespace Loader.Services.Factories
                 throw new InvalidOperationException($"{node} has no attributes!");
 
             var script = string.Empty;
-            if (creationInsideParentTable)
+            if (creationInsideParent)
                 script = SqlNodeTypeResolver.ResolveColumnNodeType(node);
             else
             {
-                var table = GetTableName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table));
+                var table = GetParentName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table ||
+                                                                            n.Name == DbSchemaConstants.View));
                 var scriptBuilder = new StringBuilder();
                 scriptBuilder.AppendLine(GetCaptionForDbObject(ColumnHeaderLiteral));
                 var column = SqlNodeTypeResolver.ResolveColumnNodeType(node);
@@ -164,9 +177,10 @@ namespace Loader.Services.Factories
             if (!node.HasAttributes())
                 throw new InvalidOperationException($"{node} has no attributes!");
 
-            var table = GetTableName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table));
+            var table = GetParentName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table ||
+                                                                        n.Name == DbSchemaConstants.View));
             var name = node.Attributes[SqlQueryConstants.Name];
-            var column = node.Attributes[SqlQueryConstants.ColumnName];
+            var columns = node.Attributes[SqlQueryConstants.Columns];
             var clustered = node.Attributes[SqlQueryConstants.TypeDesc];
 
             var isUnique = Convert.ToBoolean(node.Attributes[SqlQueryConstants.IsUnique])
@@ -180,7 +194,7 @@ namespace Loader.Services.Factories
             var scriptBuilder = new StringBuilder();
             scriptBuilder.AppendLine(GetCaptionForDbObject(IndexHeaderLiteral));
             var pattern = $"CREATE {isUnique} INDEX [{name}] " +
-                          $"ON {table} ([{column}]);";
+                          $"ON {table} ([{columns}]);";
             scriptBuilder.AppendLine(pattern);
             scriptBuilder.AppendLine(GoLiteral);
 
@@ -198,7 +212,7 @@ namespace Loader.Services.Factories
                 throw new InvalidOperationException($"{node} has no attributes!");
 
             var parent = node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Procedure);
-            return parent.Attributes[SqlQueryConstants.Definition];
+            return parent.Value;
         }
         public override string BuildKey(Node node)
         {
@@ -211,18 +225,27 @@ namespace Loader.Services.Factories
             if (!node.HasAttributes() && node.Name != DbSchemaConstants.Keys)
                 throw new InvalidOperationException($"{node} has no attributes!");
 
-            var keyScript = string.Empty;
+            var scriptBuilder = new StringBuilder();
 
             if (node.Name == DbSchemaConstants.Keys)
-                keyScript = BuildPrimaryKey(node);
+            {
+                var pKeys = node.Children.Where(n => n.Attributes[SqlQueryConstants.Type] == DbSchemaConstants.PrimaryKeyTypeLiteral).Select(n => n).ToArray();
+
+                if (pKeys.Any())
+                    scriptBuilder.Append(BuildPrimaryKey(node));
+                else
+                    return scriptBuilder.ToString();
+            }
             else
             {
                 if (node.Attributes[SqlQueryConstants.Type].Trim() == DbSchemaConstants.PrimaryKeyTypeLiteral)
-                    keyScript = BuildPrimaryKey(node);
+                    scriptBuilder.Append(BuildPrimaryKey(node));
+
                 if (node.Attributes[SqlQueryConstants.Type].Trim() == DbSchemaConstants.ForeignKeyTypeLiteral)
-                    keyScript = BuildForeignKey(node);
+                    scriptBuilder.Append(BuildForeignKey(node));
             }
-            return keyScript;
+
+            return scriptBuilder.ToString();
         }
         public override string BuildConstraint(Node node)
         {
@@ -246,36 +269,46 @@ namespace Loader.Services.Factories
 
         protected override string BuildPrimaryKey(Node node)
         {
-            string fields;
-            string name;
-            var table = GetTableName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table));
-
-
-            if (node.Name == DbSchemaConstants.Key)
-            {
-                fields = node.Attributes[SqlQueryConstants.ColumnName];
-                name = node.Attributes[SqlQueryConstants.Name];
-            }
-            else
-            {
-                var keys = node.Children.Where(n => n.Attributes[SqlQueryConstants.Type] == DbSchemaConstants.PrimaryKeyTypeLiteral).Select(n => n);
-
-                var keyFields = keys.Select(n => n.Attributes[SqlQueryConstants.ColumnName]).ToArray();
-                fields = string.Join(",", keyFields);
-
-                var key = keys.First();
-                name = key.Attributes[SqlQueryConstants.Name];
-            }
+            string fields = string.Empty;
+            string name = string.Empty;
+            var table = GetParentName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table));
 
             var scriptBuilder = new StringBuilder();
-            scriptBuilder.AppendLine(GetCaptionForDbObject("PRIMARY KEY"));
-            var pattern = $"ALTER TABLE {table} " +
-                          $"ADD CONSTRAINT {name} " +
-                          $"PRIMARY KEY({fields})";
-            scriptBuilder.AppendLine(pattern);
-            scriptBuilder.AppendLine(GoLiteral);
+            try
+            {
+                if (node.Name == DbSchemaConstants.Key)
+                {
+                    fields = node.Attributes[SqlQueryConstants.Columns];
+                    name = node.Attributes[SqlQueryConstants.Name];
+                }
+                else
+                {
+                    var pKeys = node.Children.Where(n => n.Attributes[SqlQueryConstants.Type] == DbSchemaConstants.PrimaryKeyTypeLiteral).Select(n => n).ToArray();
 
-            return scriptBuilder.ToString();
+                    if (pKeys.Any())
+                    {
+                        var keyFields = pKeys.Select(n => n.Attributes[SqlQueryConstants.Columns]).ToArray();
+                        fields = string.Join(",", keyFields);
+
+                        var key = pKeys.First();
+                        name = key.Attributes[SqlQueryConstants.Name];
+                    }
+                }
+
+                scriptBuilder.AppendLine(GetCaptionForDbObject("PRIMARY KEY"));
+                var pattern = $"ALTER TABLE {table} " +
+                              $"ADD CONSTRAINT {name} " +
+                              $"PRIMARY KEY({fields})";
+                scriptBuilder.AppendLine(pattern);
+                scriptBuilder.AppendLine(GoLiteral);
+
+                return scriptBuilder.ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return string.Empty;
+            }
         }
         protected override string BuildForeignKey(Node node)
         {
@@ -283,7 +316,7 @@ namespace Loader.Services.Factories
                 throw new InvalidOperationException($"{node} has no attributes!");
 
             var name = node.Attributes[SqlQueryConstants.Name];
-            var table = GetTableName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table));
+            var table = GetParentName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table));
             var parentTable = string.IsNullOrEmpty(table)
                 ? node.Attributes[SqlQueryConstants.FkParentTable]
                 : table;
@@ -313,7 +346,7 @@ namespace Loader.Services.Factories
             if (!node.HasAttributes())
                 throw new InvalidOperationException($"{node} has no attributes!");
 
-            var table = GetTableName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table));
+            var table = GetParentName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table));
             var name = node.Attributes[SqlQueryConstants.Name];
             var column = node.Attributes[SqlQueryConstants.ColumnName];
             var definition = node.Attributes[SqlQueryConstants.Definition];
@@ -333,7 +366,7 @@ namespace Loader.Services.Factories
             if (!node.HasAttributes())
                 throw new InvalidOperationException($"{node} has no attributes!");
 
-            var table = GetTableName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table));
+            var table = GetParentName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table));
             var name = node.Attributes[SqlQueryConstants.ColumnName];
             var definition = node.Attributes[SqlQueryConstants.Definition];
 
@@ -357,9 +390,9 @@ namespace Loader.Services.Factories
             if (!node.HasAttributes())
                 throw new InvalidOperationException($"{node} has no attributes!");
 
-            var table = GetTableName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table));
+            var table = GetParentName(node.GetParentNodeByCondition(n => n.Name == DbSchemaConstants.Table));
             var name = node.Attributes[SqlQueryConstants.Name];
-            var column = node.Attributes[SqlQueryConstants.ColumnName];
+            var columns = node.Attributes[SqlQueryConstants.Columns];
             var ignore = Convert.ToBoolean(node.Attributes[SqlQueryConstants.UcIgnoreDupKey])
                 ? "WITH IGNORE_DUP_KEY"
                 : string.Empty;
@@ -368,7 +401,7 @@ namespace Loader.Services.Factories
             scriptBuilder.AppendLine(GetCaptionForDbObject("UNIQUE CONSTRAINT"));
             var pattern = $"ALTER TABLE {table} " +
                           $"ADD CONSTRAINT {name} " +
-                          $"UNIQUE ({column}) {ignore}";
+                          $"UNIQUE ({columns}) {ignore}";
             scriptBuilder.AppendLine(pattern);
             scriptBuilder.AppendLine(GoLiteral);
 

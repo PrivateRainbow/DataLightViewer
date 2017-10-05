@@ -41,7 +41,7 @@ namespace DataLightViewer.Behaviors
         }
         #endregion
 
-        #region BrintToViewBehavior
+        #region BringToViewBehavior
 
         public static DependencyProperty IsBroughtIntoViewWhenSelectedProperty =
             DependencyProperty.RegisterAttached("IsBroughtIntoViewWhenSelected", typeof(bool), typeof(TreeViewItemBehavior), new UIPropertyMetadata(OnIsBroughtIntoViewWhenSelectedChanged));

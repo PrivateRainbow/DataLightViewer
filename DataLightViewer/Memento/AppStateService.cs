@@ -11,6 +11,7 @@ using DataLightViewer.Mediator;
 using System.Xml.Schema;
 using Loader.Scanners;
 using DataLightViewer.Helpers;
+using DataLightViewer.Services;
 
 namespace DataLightViewer.Memento
 {
@@ -49,7 +50,11 @@ namespace DataLightViewer.Memento
         {
             try
             {
-                LogWrapper.WriteInfo($"Saving the project file by folder path ({folderPath})", "Saving ...");
+                LogWrapper.WriteInfo($"Saving the project file by folder path ({folderPath})");
+
+                var savingTask = new ExecutingTask("Saving project files ...");
+                TaskExecutionMonitor.AttachMonitoring(savingTask);
+
 
                 var dataStateFilePath = Path.Combine(folderPath, FullDataStateFileName);
                 var uiStateFilePath = Path.Combine(folderPath, FullUiStateFileName);
@@ -66,12 +71,18 @@ namespace DataLightViewer.Memento
 
                 await Task.WhenAll(writeDataTask, writeUiTask);
 
-                LogWrapper.WriteInfo($"Project was save by path ({folderPath})", "Saved.");
+                LogWrapper.WriteInfo($"Project was save by path ({folderPath})");
+
+                TaskExecutionMonitor.DetachMonitoring(savingTask);
+                TaskExecutionMonitor.MonitorOneTime(new ExecutingTask("Saved."));
             }
             catch (Exception ex)
             {
                 var msg = "Error on saving the project.";
-                LogWrapper.WriteError(msg, ex.InnerException, "Not Saved.");
+
+                LogWrapper.WriteError(msg, ex.InnerException);
+                TaskExecutionMonitor.MonitorOneTime(new ExecutingTask("Not Saved."));
+
                 MessageBox.Show(msg, "DataToolsLight", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -79,7 +90,9 @@ namespace DataLightViewer.Memento
         {
             try
             {
-                LogWrapper.WriteInfo($"Opening the project file by path ({folderPath})", "Opening ...");
+                LogWrapper.WriteInfo($"Opening the project file by path ({folderPath})");
+                var openingTask = new ExecutingTask("Opening project files ...");
+                TaskExecutionMonitor.AttachMonitoring(openingTask);
 
                 var dataStateFilePath = Path.Combine(folderPath, FullDataStateFileName);
                 var uiStateFilePath = Path.Combine(folderPath, FullUiStateFileName);
@@ -89,19 +102,28 @@ namespace DataLightViewer.Memento
 
                 await Task.WhenAll(readDataTask, readUiTask).ContinueWith(nodes => InitializeMemento(nodes));
 
-                LogWrapper.WriteInfo($"Project was opened by path ({folderPath})", "Opened.");
+                LogWrapper.WriteInfo($"Project was opened by path ({folderPath})");
+
+                TaskExecutionMonitor.DetachMonitoring(openingTask);
+                TaskExecutionMonitor.MonitorOneTime(new ExecutingTask("Opened."));
             }
             catch(InvalidOperationException ex)
             {
                 var msg = "Error on opening the project. Incorrect project type";
-                LogWrapper.WriteError(ex.Message, ex, "Incorrect project type.");
+
+                LogWrapper.WriteError(ex.Message, ex);
+                TaskExecutionMonitor.MonitorOneTime(new ExecutingTask("File was not valid."));
+
                 MessageBox.Show(msg, "DataToolsLight", MessageBoxButton.OK, MessageBoxImage.Error);
                 throw;
             }
             catch (Exception ex)
             {
                 var msg = "Error on opening the project.";
-                LogWrapper.WriteError(msg, ex.InnerException, "Not Opened.");
+
+                LogWrapper.WriteError(msg, ex.InnerException);
+                TaskExecutionMonitor.MonitorOneTime(new ExecutingTask("Not Opened."));
+
                 MessageBox.Show(msg, "DataToolsLight", MessageBoxButton.OK, MessageBoxImage.Error);
                 throw;
             }
@@ -119,7 +141,7 @@ namespace DataLightViewer.Memento
                         serializer.Serialize(node);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     throw;
                 }
@@ -142,7 +164,7 @@ namespace DataLightViewer.Memento
                         return node;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     throw;
                 }

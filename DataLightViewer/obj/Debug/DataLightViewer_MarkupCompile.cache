@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 E:\Ezra Klimt\Git\master\DataLightViewer\App.xaml
-9715192737
+11-1962655124
 
-39-1401960976
-20-1614764181
-Controls\SearchTreeViewItemBox.xaml;Styles\Buttons.xaml;Styles\Colors.xaml;Styles\Controls.xaml;Styles\Fonts.xaml;Styles\Texts.xaml;Styles\TreeView.xaml;Views\Main\MainWindow.xaml;Views\ObjectExplorerWindow.xaml;
+561195336524
+211211378682
+Styles\Buttons.xaml;Styles\Colors.xaml;Styles\Controls.xaml;Styles\Fonts.xaml;Styles\Menu.xaml;Styles\Texts.xaml;Styles\TreeView.xaml;Themes\Generic.xaml;Themes\SearchTreeViewItemBox.xaml;Views\Main\MainWindow.xaml;Views\ObjectExplorerWindow.xaml;
 
-True
+False
 

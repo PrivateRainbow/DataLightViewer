@@ -40,6 +40,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.5.0.3\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -73,32 +76,51 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AttachedProperties\BaseAttachedProperty.cs" />
+    <Compile Include="AttachedProperties\HasTextProperty.cs" />
+    <Compile Include="AttachedProperties\MonitorPasswordProperty.cs" />
+    <Compile Include="Behaviors\AvalonEditBehaviour.cs" />
     <Compile Include="Behaviors\TreeViewItemBehavior.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Commands\RelayParameterizedCommand.cs" />
-    <Compile Include="Controls\SearchTreeViewItemBox.xaml.cs">
-      <DependentUpon>SearchTreeViewItemBox.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Controls\SearchTreeViewItemControl.cs" />
+    <Compile Include="Convertors\BaseValueConverter.cs" />
     <Compile Include="Convertors\HeaderToImageConvertor.cs" />
+    <Compile Include="Convertors\InvertedBooleanToVisiblityConverter.cs" />
     <Compile Include="Convertors\LeftMarginMultiplierConverter.cs" />
+    <Compile Include="Filters\NodeSearchFilters.cs" />
     <Compile Include="Helpers\ConnectionStringHelper.cs" />
     <Compile Include="Helpers\DbConnectionHelper.cs" />
     <Compile Include="Helpers\DialogHelper.cs" />
+    <Compile Include="Helpers\EncryptionHelper.cs" />
     <Compile Include="Helpers\ExpressionHelpers.cs" />
+    <Compile Include="Helpers\Extentions\SecureStringExtentions.cs" />
     <Compile Include="Helpers\Extentions\TreeViewItemExtensions.cs" />
+    <Compile Include="Helpers\NodeHelper.cs" />
+    <Compile Include="Helpers\PasswordBoxAssistant.cs" />
     <Compile Include="Helpers\TextHelper.cs" />
     <Compile Include="LogHelper\Logger.cs" />
     <Compile Include="LogHelper\LogWrapper.cs" />
     <Compile Include="Mediator\MessageContext.cs" />
     <Compile Include="Mediator\MessageType.cs" />
-    <Compile Include="Mediator\Messenger.cs" />
-    <Compile Include="Mediator\MultiDictionary.cs" />
+    <Compile Include="Mediator\Bus\Messenger.cs" />
+    <Compile Include="Mediator\Bus\MultiDictionary.cs" />
+    <Compile Include="Memento\AppStateService.cs" />
     <Compile Include="Memento\NodeMemento.cs" />
+    <Compile Include="Memento\NodeStateConvertor.cs" />
+    <Compile Include="Memento\ProjectFileType.cs" />
+    <Compile Include="Memento\ValidationSchemaProvider.cs" />
     <Compile Include="Models\Authentication.cs" />
     <Compile Include="Models\Enums.cs" />
-    <Compile Include="Models\EventArgs\NodeEventArgs.cs" />
-    <Compile Include="Models\User.cs" />
+    <Compile Include="Resolvers\IconsSelector.cs" />
+    <Compile Include="Resolvers\IntegrityDataResolver.cs" />
+    <Compile Include="Resolvers\SyntaxHighlightResolver.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\NodeContentPresenter.cs" />
+    <Compile Include="Services\TaskMonitor.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\ExplorerViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -117,10 +139,6 @@
     <Compile Include="Views\ObjectExplorerWindow.xaml.cs">
       <DependentUpon>ObjectExplorerWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\SearchTreeViewItemBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Styles\Buttons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -137,11 +155,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Styles\Menu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\Texts.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\TreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\SearchTreeViewItemBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -172,6 +202,23 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Resources\DataToolsLight-Data-Ext.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Resources\DataToolsLight-Data.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Resources\DataToolsLight-UI-EXT.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Resources\DataToolsLight-UI.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Resources\sql-syntax.xshd" />
     <Resource Include="Fonts\fontawesome-webfont.ttf" />
     <Resource Include="Fonts\Lato-Black.ttf" />
     <Resource Include="Fonts\Lato-BlackItalic.ttf" />
@@ -245,7 +292,6 @@
     <Resource Include="Icons\Menu\open.png" />
     <Resource Include="Icons\Menu\save.png" />
     <Resource Include="Icons\Menu\search.png" />
-    <Resource Include="Icons\Menu\sql.png" />
     <Resource Include="Icons\Menu\update.png" />
     <Resource Include="Icons\Menu\xml.png" />
   </ItemGroup>
@@ -254,13 +300,18 @@
     <Resource Include="Icons\database.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\procedure-data.png" />
-    <Resource Include="Icons\table-data.png" />
-    <Resource Include="Icons\view-data.png" />
+    <Resource Include="Icons\procedure.png" />
+    <Resource Include="Icons\table.png" />
+    <Resource Include="Icons\view.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\key.png" />
-    <Resource Include="Icons\primary-key.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Menu\sql.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sql.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

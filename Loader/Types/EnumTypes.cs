@@ -29,9 +29,9 @@ namespace Loader.Types
 
     public enum DbNodeBuilderType
     {
-        Bulk,
-        Lazy,
-        PartialLazy
+        Bulk = 0,
+        Lazy = 1,
+        Slim = 2
     }
 
     public enum DbSchemaObjectType
@@ -55,6 +55,8 @@ namespace Loader.Types
         Columns,
         Keys,
         Constraints,
-        Parameters
+        Parameters,
+
+        Artificial
     }
 }

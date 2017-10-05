@@ -121,4 +121,16 @@
   <data name="DataToolsLight_Data" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\DataToolsLight-Data.xsd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="DataToolsLight_Data_Ext" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\DataToolsLight-Data-Ext.xsd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="DataToolsLight_UI" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\DataToolsLight-UI.xsd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="DataToolsLight_UI_EXT" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\DataToolsLight-UI-EXT.xsd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="t_sql_syntax" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\sql-syntax.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

@@ -4,6 +4,7 @@ using System.Text;
 using Loader.Components;
 using Loader.Services.Factories;
 using Loader.Types;
+using Loader.Helpers;
 
 namespace Loader.Services.Helpers
 {
@@ -36,7 +37,7 @@ namespace Loader.Services.Helpers
 
             var scriptBuilder = new StringBuilder();
 
-            if (IsRootNode(node) && node.Name == DbSchemaConstants.Database)
+            if (IsRootNode(node))
             {
                 var database = _buildFactory.BuildDatabase(node);
                 var tables = node.Children.Find(t => t.Name == DbSchemaConstants.Tables);
@@ -48,6 +49,7 @@ namespace Loader.Services.Helpers
                 scriptBuilder.AppendLine(BuildHeaderNode(views));
                 scriptBuilder.AppendLine(BuildHeaderNode(procedures));
             }
+
             if (IsHeaderNode(node))
                 scriptBuilder.AppendLine(BuildHeaderNode(node));
             else
@@ -110,10 +112,6 @@ namespace Loader.Services.Helpers
 
             switch (type)
             {
-                case DbSchemaConstants.Database:
-                    script = _buildFactory.BuildDatabase(node);
-                    break;
-
                 case DbSchemaConstants.Table:
                     script = _buildFactory.BuildTable(node);
                     break;
@@ -155,6 +153,6 @@ namespace Loader.Services.Helpers
         }
 
         private bool IsHeaderNode(Node node) => _headerNodes.Contains(node.Name);
-        private bool IsRootNode(Node node) => node.Parent == null;
+        private bool IsRootNode(Node node) => node.Name == DbSchemaConstants.Database;
     }
 }

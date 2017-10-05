@@ -31,6 +31,7 @@ namespace DataLightViewer.ViewModels
         public NodeTreeViewModel NodeTreeViewModel { get; }
         public StatusViewModel StatusViewModel { get; }
 
+        public ExplorerViewModel ExplorerViewModel { get; internal set; }
         #endregion
 
         #region Commands
@@ -39,7 +40,8 @@ namespace DataLightViewer.ViewModels
         public ICommand OpenProjectCommand { get; }
         public ICommand SaveProjectCommand { get; }
         public ICommand SaveProjectAsCommand { get; }
-        public ICommand CloseCommand { get; }
+
+        public ICommand ConnectToServerCommand { get; }
 
         #endregion
 
@@ -54,9 +56,10 @@ namespace DataLightViewer.ViewModels
 
             OpenProjectCommand = new RelayCommand(() => OpenProject());
             CreateProjectCommand = new RelayCommand(() => CreateProject());
-            SaveProjectCommand = new RelayCommand(() => SaveProject());
-            SaveProjectAsCommand = new RelayCommand(() => SaveProjectAs());
-            CloseCommand = new RelayCommand(() => RunDefaultSaving());
+            SaveProjectCommand = new RelayCommand(() => SaveProject(), (o) => App.IsSessionInitialized);
+            SaveProjectAsCommand = new RelayCommand(() => SaveProjectAs(), (o) => App.IsSessionInitialized);
+
+            ConnectToServerCommand = new RelayCommand(() => RunProjectInitialization(), (o) => App.WorkState == AppWorkState.Offline);
 
             Messenger.Instance.Register<NodeMemento>(MessageType.MementoInitialized, async nm => await OnProjectSaving(nm));
         }
@@ -70,8 +73,9 @@ namespace DataLightViewer.ViewModels
             if (App.IsSessionInitialized)
                 RunSafeProjectCreating();
             else
-                RunProjectCreating();
+                RunProjectInitialization();
         }
+
         private void OpenProject()
         {
             if (App.IsSessionInitialized)
@@ -111,24 +115,30 @@ namespace DataLightViewer.ViewModels
             switch (saveMode)
             {
                 case AppSaveMode.WithoutSaving:
-                    RunProjectCreating();
+                    RunProjectInitialization();
                     break;
 
                 case AppSaveMode.WithSaving:
                     SaveProject();
-                    RunProjectCreating();
+                    RunProjectInitialization();
                     break;
 
                 case AppSaveMode.CancelSaving:
                     break;
             }
         }
-        private void RunProjectCreating() => new ObjectExplorerWindow().ShowDialog();
 
-        private void RunDefaultSaving()
+        private void RunProjectInitialization()
         {
-            if(AppSaveMode.WithSaving == DialogHelper.SaveCurrentApplicationSession(withCancelation: false))
-                SaveProject();
+            Refresh();
+
+            var connectionMode = App.WorkState == AppWorkState.Offline
+                                                  ? AppConnectionMode.Reopen
+                                                  : AppConnectionMode.New;
+
+            ExplorerViewModel = new ExplorerViewModel(connectionMode);
+            var explorer = new ObjectExplorerWindow(ExplorerViewModel);
+            explorer.ShowDialog();
         }
 
         private async Task RunProjectOpening()
@@ -144,7 +154,9 @@ namespace DataLightViewer.ViewModels
 
                 _currentProjectFolderPath = folder;
                 _saveStrategy = SavingProjectStrategy.CurrentProjectFile;
+
                 App.IsSessionInitialized = true;
+                App.WorkState = AppWorkState.Offline;
             }
             catch (Exception)
             {
@@ -212,8 +224,34 @@ namespace DataLightViewer.ViewModels
             _currentProjectFolderPath = folder;
         }
 
+        private void Refresh()
+        {
+            SqlScriptViewModel.ClearScriptCommand.Execute(null);
+        }
+
+        #endregion
+
+        public void AppShutDownHandler(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var result = DialogHelper.SaveCurrentApplicationSession();
+
+            switch (result)
+            {
+                case AppSaveMode.WithSaving:
+                    SaveProject();
+                    break;
+
+                case AppSaveMode.CancelSaving:
+                    e.Cancel = true;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
     }
-    #endregion
-           
+
+
 }
 

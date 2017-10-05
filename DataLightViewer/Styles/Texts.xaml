@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:attached="clr-namespace:DataLightViewer.AttachedProperties"
-                    xmlns:cvtors="clr-namespace:DataLightViewer.Convertors">
+                    xmlns:cvtors="clr-namespace:DataLightViewer.Convertors"
+                    xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit">
     
     
     <ResourceDictionary.MergedDictionaries>
@@ -25,9 +26,14 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
 
-    <Style x:Key="SqlEditorTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource BaseTextBoxStyle}">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeLarge}"/>
-        <Setter Property="TextWrapping" Value="Wrap"/>
+    <Style x:Key="SqlEditor" TargetType="{x:Type avalon:TextEditor}">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegularX}"/>
+        <Setter Property="FontFamily" Value="Consolas"/>
+        
+        <Setter Property="WordWrap" Value="True"/>
+        <Setter Property="ShowLineNumbers" Value="True"/>
+        <Setter Property="LineNumbersForeground" Value="{StaticResource ForegroundEditorLineBrush}"/>
+
         <Setter Property="VerticalContentAlignment" Value="Top"/>
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>

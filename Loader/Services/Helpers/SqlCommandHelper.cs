@@ -42,14 +42,14 @@ namespace Loader.Services.Helpers
             if (string.IsNullOrEmpty(expression)) throw new ArgumentException($"{nameof(expression)}");
             if (string.IsNullOrEmpty(objectId)) throw new ArgumentException($"{nameof(objectId)}");
 
-            var param = new SqlParameter(SqlQueryConstants.ObjectIdParam, objectId);
+            var param = new SqlParameter(SqlQueryConstants.ParentIdParam, objectId);
             var cmd = new SqlCommand(expression, _connection);
             cmd.Parameters.Add(param);
 
             return cmd;
         }
 
-        private SqlCommand GetCommand(string expression, params SqlParameter[] parameters)
+        public SqlCommand MakeCommandWithParams(string expression, params SqlParameter[] parameters)
         {
             if (string.IsNullOrEmpty(expression)) throw new ArgumentException($"{nameof(expression)}");
 

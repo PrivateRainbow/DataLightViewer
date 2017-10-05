@@ -12,6 +12,9 @@ using System.Windows;
 using System.Security;
 using DataLightViewer.Helpers;
 using System;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using DataLightViewer.Services;
 
 namespace DataLightViewer.ViewModels
 {
@@ -19,23 +22,39 @@ namespace DataLightViewer.ViewModels
     {
         #region Events
 
-        public event EventHandler ValidationCheckMessage = (obj, e) => {};
+        public event EventHandler ValidationCheckMessage = (obj, e) => { };
+        public event EventHandler ConnectionEstablished = (obj, e) => { };
+        public event EventHandler UpdatePasswordMessage;
 
         #endregion
 
         #region Private Members
 
-        private readonly Window _objectExplorerWindow;
+        /// <summary>
+        /// When project has been opened from project-file 
+        /// and user can change a current project connection
+        /// need to cash for the further server connection validating 
+        /// </summary>
+        private string _previousConnection;
+
+        private string _userId;
+        private SecureString _userPassword;
+
+        private bool _isConnectionStarted;
+        private bool _authorizedWithCredentials;
+        private bool _isServerConnectionEntered;
+
+        private string _selectedServerConnection;
+        private AppConnectionMode _appConnectionMode;
+        private Authentication _selectedAuthentication;
+        private List<Authentication> _authenticationTypes;
+        private ObservableCollection<string> _servers;
         private CancellationTokenSource _cancelServerConnectionTokenSource;
 
         #endregion
 
         #region Properties
 
-        /// <summary>
-        /// Credentials for connection
-        /// </summary>
-        private string _userId;
         public string UserId
         {
             get => _userId;
@@ -45,8 +64,6 @@ namespace DataLightViewer.ViewModels
                 OnPropertyChanged(nameof(UserId));
             }
         }
-
-        private SecureString _userPassword;
         public SecureString UserPassword
         {
             get => _userPassword;
@@ -56,11 +73,6 @@ namespace DataLightViewer.ViewModels
                 OnPropertyChanged(nameof(UserPassword));
             }
         }
-
-        /// <summary>
-        /// Indicates that connection is fired in execution context
-        /// </summary>
-        private bool _isConnectionStarted;
         public bool IsConnectionStarted
         {
             get => _isConnectionStarted;
@@ -70,11 +82,6 @@ namespace DataLightViewer.ViewModels
                 OnPropertyChanged(nameof(IsConnectionStarted));
             }
         }
-
-        /// <summary>
-        /// In case when we use credentials for connection to server
-        /// </summary>
-        private bool _authorizedWithCredentials;
         public bool AuthorizedWithCredentials
         {
             get => _authorizedWithCredentials;
@@ -84,8 +91,6 @@ namespace DataLightViewer.ViewModels
                 OnPropertyChanged(nameof(AuthorizedWithCredentials));
             }
         }
-
-        private bool _isServerConnectionEntered;
         public bool IsServerConnectionEntered
         {
             get => _isServerConnectionEntered;
@@ -95,8 +100,6 @@ namespace DataLightViewer.ViewModels
                 OnPropertyChanged(nameof(IsServerConnectionEntered));
             }
         }
-
-        private string _selectedServerConnection;
         public string SelectedServerConnection
         {
             get => _selectedServerConnection;
@@ -117,8 +120,15 @@ namespace DataLightViewer.ViewModels
                 }
             }
         }
-
-        private Authentication _selectedAuthentication;
+        public AppConnectionMode ConnectionMode
+        {
+            get => _appConnectionMode;
+            set
+            {
+                _appConnectionMode = value;
+                OnPropertyChanged(nameof(ConnectionMode));
+            }
+        }
         public Authentication SelectedAuthentication
         {
             get => _selectedAuthentication;
@@ -129,16 +139,31 @@ namespace DataLightViewer.ViewModels
 
                 _selectedAuthentication = value;
 
-                AuthorizedWithCredentials = _selectedAuthentication.Type == AuthenticationType.SqlServer ? true : false;
+                if(_selectedAuthentication.Type == AuthenticationType.SqlServer)
+                    AuthorizedWithCredentials = true;
+                else
+                {
+                    AuthorizedWithCredentials = false;
+
+                    UserId = string.Empty;
+                    UserPassword?.Clear();
+                    UpdatePasswordMessage?.Invoke(null, EventArgs.Empty);
+                }
 
                 OnPropertyChanged(nameof(SelectedAuthentication));
             }
         }
-
-        private List<Authentication> _authenticationTypes;
-        public List<Authentication> AuthenticationTypes => _authenticationTypes;
-
-        private ObservableCollection<string> _servers;
+        public List<Authentication> AuthenticationTypes
+        {
+            get => _authenticationTypes;
+            set
+            {
+                if (ReferenceEquals(_authenticationTypes, value))
+                    return;
+                _authenticationTypes = value;
+                OnPropertyChanged(nameof(AuthenticationTypes));
+            }
+        }
         public ObservableCollection<string> Servers
         {
             get => _servers;
@@ -156,80 +181,137 @@ namespace DataLightViewer.ViewModels
 
         #region Commands
 
-        private readonly ICommand _connectCommand;
-        private readonly ICommand _cancelCommand;
-
-        public ICommand ConnectCommand => _connectCommand;
-        public ICommand CancelCommand => _cancelCommand;
+        public ICommand ConnectCommand { get; }
+        public ICommand CancelCommand { get; }
 
         #endregion
 
         #region Init
 
-        public ExplorerViewModel(Window window)
+        private ExplorerViewModel()
         {
-            _objectExplorerWindow = window;
-
-            _authenticationTypes = new List<Authentication>
+            AuthenticationTypes = new List<Authentication>
             {
                 new Authentication("Windows Authentication", AuthenticationType.Windows),
                 new Authentication("SQL Server Authentication", AuthenticationType.SqlServer)
             };
 
-            _connectCommand = new RelayCommand(() => ConnectToServerAsync(_cancelServerConnectionTokenSource.Token));
-            _cancelCommand = new RelayCommand(() => CancelConnectionToServer());
-
+            SelectedAuthentication = AuthenticationTypes[0];
             _cancelServerConnectionTokenSource = new CancellationTokenSource();
+
+            ConnectCommand = new RelayCommand(() => ConnectToServerAsync(), CanConnectToServer);
+            CancelCommand = new RelayCommand(() => CancelConnectionToServer());
+        }
+
+        public bool CanConnectToServer(object o)
+        {
+            if (!IsServerConnectionEntered)
+                return false;
+
+            if (IsConnectionStarted)
+                return false;
+
+            if(AuthorizedWithCredentials)
+            {
+                if (string.IsNullOrEmpty(UserId))
+                    return false;
+
+                if (UserPassword == null || UserPassword?.Length == 0)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public ExplorerViewModel(AppConnectionMode connectionMode = AppConnectionMode.New) : this()
+        {
+            ConnectionMode = connectionMode;
+
+            if (ConnectionMode == AppConnectionMode.Reopen)
+                InitializeServerConnection();
         }
 
         #endregion
 
-        private async void ConnectToServerAsync(CancellationToken token)
+        #region Connection 
+
+        private void ConnectToServerAsync()
         {
             ValidationCheckMessage.Invoke(null, EventArgs.Empty);
 
-            var serverConnection = GetServerConnectionString();
-            var connectionTester = new ConnectionTester(new SqlServerConnectionContext(serverConnection));
+            var connection = GetServerConnectionString();
 
-            LogWrapper.WriteInfo($"{nameof(ConnectToServerAsync)} has started! ",
-                                    "Connecting to server ...");
+            IsConnectionStarted = true;
+            if (IsEnteredConnectionValid(connection))
+                RunConnection(connection, _cancelServerConnectionTokenSource.Token);
+        }
+
+        private async void RunConnection(string connection, CancellationToken token)
+        {
+            var connectingTask = new ExecutingTask("Connecting to the server ...");
+            TaskExecutionMonitor.AttachMonitoring(connectingTask);
+
+            LogWrapper.WriteInfo($"{nameof(ConnectToServerAsync)} has started! ");
+
+            var connectionTester = new ConnectionTester(new SqlServerConnectionContext(connection));
 
             try
             {
-                IsConnectionStarted = true;
                 if (await connectionTester.VerifyConnectionAsync(token))
                 {
-                    App.ServerConnectionString = serverConnection;
+                    App.ServerConnectionString = connection;
                     App.IsSessionInitialized = true;
+                    App.WorkState = AppWorkState.Online;
 
-                    Messenger.Instance.NotifyColleagues(MessageType.OnInitializingProjectFile);
-
+                    Messenger.Instance.NotifyColleagues(MessageType.OnInitializingProjectFile, ConnectionMode);
                     LogWrapper.WriteInfo($"{nameof(ConnectToServerAsync)} : connection is established!");
-                    _objectExplorerWindow.Close();
+                    TaskExecutionMonitor.DetachMonitoring(connectingTask);
+
+                    ConnectionEstablished.Invoke(this, EventArgs.Empty);
                 }
                 else
                     IsConnectionStarted = false;
             }
+            catch (OperationCanceledException ex)
+            {
+                LogWrapper.WriteError($"{nameof(ConnectToServerAsync)}", ex);
+                TaskExecutionMonitor.MonitorOneTime(new ExecutingTask("Connecting to the server was canceled."));
+
+                IsConnectionStarted = false;
+                UserId = string.Empty;
+
+                UpdatePasswordMessage.Invoke(null, EventArgs.Empty);
+            }
             catch (SqlException ex)
             {
-                LogWrapper.WriteError($"{nameof(ConnectToServerAsync)}", ex, "The server is not responding.");
+                LogWrapper.WriteError($"{nameof(ConnectToServerAsync)}", ex);
+                TaskExecutionMonitor.MonitorOneTime(new ExecutingTask("The server is not responding."));
+
                 MessageBox.Show("Server is not responding.", "Error");
+
+                IsConnectionStarted = false;
+                UserId = string.Empty;
+
+                UpdatePasswordMessage.Invoke(null, EventArgs.Empty);
             }
         }
-
         private void CancelConnectionToServer()
         {
             if (IsConnectionStarted)
                 _cancelServerConnectionTokenSource.Cancel();
             else
-                _objectExplorerWindow.Close();
+                ConnectionEstablished.Invoke(this, EventArgs.Empty);
         }
 
+        #endregion
+
+        #region Helpers
+
         private string GetServerConnectionString()
-        {
+        {            
             var builder = new SqlConnectionStringBuilder()
             {
-                DataSource = _selectedServerConnection
+                DataSource = ParseServerConnection()
             };
 
             switch (_selectedAuthentication.Type)
@@ -251,5 +333,54 @@ namespace DataLightViewer.ViewModels
             return builder.ConnectionString;
         }
 
+        private string ParseServerConnection()
+        {
+            var source = _selectedServerConnection;
+            var regex = new Regex($@":{1}");
+
+            if(regex.IsMatch(source))
+            {
+                var split = Regex.Split(source, @":");
+                var connection = split[0] + "," + split[1];
+                return connection;
+            }
+
+            return _selectedServerConnection;
+        }
+
+        private void InitializeServerConnection()
+        {
+            var builder = new SqlConnectionStringBuilder(string.Copy(App.ServerConnectionString));
+            _previousConnection = builder.ToString();
+
+            SelectedServerConnection = builder.DataSource;
+
+            if (builder.IntegratedSecurity)
+                SelectedAuthentication = AuthenticationTypes[0];
+            else
+                SelectedAuthentication = AuthenticationTypes[1];
+
+            UserId = builder.UserID ?? string.Empty;
+        }
+
+        private bool ConnectionHasChanged(string previousVersion, string newVersion)
+        {
+            return previousVersion != newVersion;
+        }
+        private bool IsEnteredConnectionValid(string connection)
+        {
+            if (ConnectionMode != AppConnectionMode.Reopen)
+                return true;
+
+            if (!ConnectionHasChanged(_previousConnection, connection))
+                return true;
+
+            if (DialogHelper.ConfirmEnteredServerConnection())
+                return true;
+            else
+                return false;
+        }
+
+        #endregion
     }
 }

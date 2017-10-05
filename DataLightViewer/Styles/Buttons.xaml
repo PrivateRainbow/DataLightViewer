@@ -102,21 +102,13 @@
                     </Border>
 
                     <ControlTemplate.Triggers>
+
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="{StaticResource BackgroundStatusBarOrangeBrush}"/>
                             <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
                             <Setter Property="BorderThickness" Value="0"/>
-                        </Trigger>
+                        </Trigger>                        
 
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding ElementName=AuthenticationComboBox, Path=DisplayMemberPath}" Value="SQL Server Authentication"/>
-                                <Condition Binding="{Binding UserId}" Value=""/>
-                                <Condition Binding="{Binding UserPassword}" Value=""/>
-                            </MultiDataTrigger.Conditions>
-                            <Setter Property="IsEnabled" Value="False"/>
-                        </MultiDataTrigger>
-                        
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

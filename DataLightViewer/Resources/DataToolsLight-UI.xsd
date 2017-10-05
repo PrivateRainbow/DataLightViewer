@@ -5,16 +5,6 @@
         <xs:element name="Database" maxOccurs="unbounded" minOccurs="0">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="DummyChild" minOccurs="0">
-                <xs:complexType>
-                  <xs:simpleContent>
-                    <xs:extension base="xs:string">
-                      <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
-                      <xs:attribute type="xs:string" name="isSelected" use="optional"/>
-                    </xs:extension>
-                  </xs:simpleContent>
-                </xs:complexType>
-              </xs:element>
               <xs:element name="Tables" minOccurs="0">
                 <xs:complexType>
                   <xs:sequence>
@@ -30,16 +20,7 @@
                                       <xs:extension base="xs:string">
                                         <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                                         <xs:attribute type="xs:string" name="isSelected" use="optional"/>
-                                      </xs:extension>
-                                    </xs:simpleContent>
-                                  </xs:complexType>
-                                </xs:element>
-                                <xs:element name="DummyChild" minOccurs="0">
-                                  <xs:complexType>
-                                    <xs:simpleContent>
-                                      <xs:extension base="xs:string">
-                                        <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
-                                        <xs:attribute type="xs:string" name="isSelected" use="optional"/>
+                                        <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                                       </xs:extension>
                                     </xs:simpleContent>
                                   </xs:complexType>
@@ -47,6 +28,7 @@
                               </xs:sequence>
                               <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                               <xs:attribute type="xs:string" name="isSelected" use="optional"/>
+                              <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                             </xs:complexType>
                           </xs:element>
                           <xs:element name="Keys" minOccurs="0">
@@ -58,16 +40,7 @@
                                       <xs:extension base="xs:string">
                                         <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                                         <xs:attribute type="xs:string" name="isSelected" use="optional"/>
-                                      </xs:extension>
-                                    </xs:simpleContent>
-                                  </xs:complexType>
-                                </xs:element>
-                                <xs:element name="DummyChild" minOccurs="0">
-                                  <xs:complexType>
-                                    <xs:simpleContent>
-                                      <xs:extension base="xs:string">
-                                        <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
-                                        <xs:attribute type="xs:string" name="isSelected" use="optional"/>
+                                        <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                                       </xs:extension>
                                     </xs:simpleContent>
                                   </xs:complexType>
@@ -75,6 +48,7 @@
                               </xs:sequence>
                               <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                               <xs:attribute type="xs:string" name="isSelected" use="optional"/>
+                              <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                             </xs:complexType>
                           </xs:element>
                           <xs:element name="Constraints" minOccurs="0">
@@ -86,16 +60,7 @@
                                       <xs:extension base="xs:string">
                                         <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                                         <xs:attribute type="xs:string" name="isSelected" use="optional"/>
-                                      </xs:extension>
-                                    </xs:simpleContent>
-                                  </xs:complexType>
-                                </xs:element>
-                                <xs:element name="DummyChild" minOccurs="0">
-                                  <xs:complexType>
-                                    <xs:simpleContent>
-                                      <xs:extension base="xs:string">
-                                        <xs:attribute type="xs:string" name="isExpanded"/>
-                                        <xs:attribute type="xs:string" name="isSelected"/>
+                                        <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                                       </xs:extension>
                                     </xs:simpleContent>
                                   </xs:complexType>
@@ -103,6 +68,7 @@
                               </xs:sequence>
                               <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                               <xs:attribute type="xs:string" name="isSelected" use="optional"/>
+                              <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                             </xs:complexType>
                           </xs:element>
                           <xs:element name="Indexes" minOccurs="0">
@@ -114,16 +80,7 @@
                                       <xs:extension base="xs:string">
                                         <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                                         <xs:attribute type="xs:string" name="isSelected" use="optional"/>
-                                      </xs:extension>
-                                    </xs:simpleContent>
-                                  </xs:complexType>
-                                </xs:element>
-                                <xs:element name="DummyChild" minOccurs="0">
-                                  <xs:complexType>
-                                    <xs:simpleContent>
-                                      <xs:extension base="xs:string">
-                                        <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
-                                        <xs:attribute type="xs:string" name="isSelected" use="optional"/>
+                                        <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                                       </xs:extension>
                                     </xs:simpleContent>
                                   </xs:complexType>
@@ -131,26 +88,19 @@
                               </xs:sequence>
                               <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                               <xs:attribute type="xs:string" name="isSelected" use="optional"/>
-                            </xs:complexType>
-                          </xs:element>
-                          <xs:element name="DummyChild" minOccurs="0">
-                            <xs:complexType>
-                              <xs:simpleContent>
-                                <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
-                                  <xs:attribute type="xs:string" name="isSelected" use="optional"/>
-                                </xs:extension>
-                              </xs:simpleContent>
+                              <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>
                         <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                         <xs:attribute type="xs:string" name="isSelected" use="optional"/>
+                        <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>
                   <xs:attribute type="xs:string" name="isExpanded"/>
                   <xs:attribute type="xs:string" name="isSelected"/>
+                  <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                 </xs:complexType>
               </xs:element>
               <xs:element name="Views" minOccurs="0">
@@ -168,6 +118,7 @@
                                       <xs:extension base="xs:string">
                                         <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                                         <xs:attribute type="xs:string" name="isSelected" use="optional"/>
+                                        <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                                       </xs:extension>
                                     </xs:simpleContent>
                                   </xs:complexType>
@@ -175,6 +126,7 @@
                               </xs:sequence>
                               <xs:attribute type="xs:string" name="isExpanded"/>
                               <xs:attribute type="xs:string" name="isSelected"/>
+                              <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                             </xs:complexType>
                           </xs:element>
                           <xs:element name="Indexes" minOccurs="0">
@@ -183,16 +135,7 @@
                                 <xs:extension base="xs:string">
                                   <xs:attribute type="xs:string" name="isExpanded"/>
                                   <xs:attribute type="xs:string" name="isSelected"/>
-                                </xs:extension>
-                              </xs:simpleContent>
-                            </xs:complexType>
-                          </xs:element>
-                          <xs:element name="DummyChild" minOccurs="0">
-                            <xs:complexType>
-                              <xs:simpleContent>
-                                <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
-                                  <xs:attribute type="xs:string" name="isSelected" use="optional"/>
+                                  <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                                 </xs:extension>
                               </xs:simpleContent>
                             </xs:complexType>
@@ -200,11 +143,13 @@
                         </xs:sequence>
                         <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                         <xs:attribute type="xs:string" name="isSelected" use="optional"/>
+                        <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>
                   <xs:attribute type="xs:string" name="isExpanded"/>
                   <xs:attribute type="xs:string" name="isSelected"/>
+                  <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                 </xs:complexType>
               </xs:element>
               <xs:element name="Procedures" minOccurs="0">
@@ -216,22 +161,13 @@
                           <xs:element name="Parameters" minOccurs="0">
                             <xs:complexType>
                               <xs:sequence>
-                                <xs:element name="DummyChild" minOccurs="0">
-                                  <xs:complexType>
-                                    <xs:simpleContent>
-                                      <xs:extension base="xs:string">
-                                        <xs:attribute type="xs:string" name="isExpanded"/>
-                                        <xs:attribute type="xs:string" name="isSelected"/>
-                                      </xs:extension>
-                                    </xs:simpleContent>
-                                  </xs:complexType>
-                                </xs:element>
                                 <xs:element name="Parameter" maxOccurs="unbounded" minOccurs="0">
                                   <xs:complexType>
                                     <xs:simpleContent>
                                       <xs:extension base="xs:string">
                                         <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                                         <xs:attribute type="xs:string" name="isSelected" use="optional"/>
+                                        <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                                       </xs:extension>
                                     </xs:simpleContent>
                                   </xs:complexType>
@@ -239,36 +175,31 @@
                               </xs:sequence>
                               <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                               <xs:attribute type="xs:string" name="isSelected" use="optional"/>
-                            </xs:complexType>
-                          </xs:element>
-                          <xs:element name="DummyChild" minOccurs="0">
-                            <xs:complexType>
-                              <xs:simpleContent>
-                                <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
-                                  <xs:attribute type="xs:string" name="isSelected" use="optional"/>
-                                </xs:extension>
-                              </xs:simpleContent>
+                              <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>
                         <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
                         <xs:attribute type="xs:string" name="isSelected" use="optional"/>
+                        <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>
                   <xs:attribute type="xs:string" name="isExpanded"/>
                   <xs:attribute type="xs:string" name="isSelected"/>
+                  <xs:attribute type="xs:string" name="showChildrenQuantity"/>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
             <xs:attribute type="xs:string" name="isExpanded" use="optional"/>
             <xs:attribute type="xs:string" name="isSelected" use="optional"/>
+            <xs:attribute type="xs:string" name="showChildrenQuantity"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:attribute type="xs:string" name="isExpanded"/>
       <xs:attribute type="xs:string" name="isSelected"/>
+      <xs:attribute type="xs:string" name="showChildrenQuantity"/>
       <xs:attribute type="xs:string" name="file-type"/>
     </xs:complexType>
   </xs:element>

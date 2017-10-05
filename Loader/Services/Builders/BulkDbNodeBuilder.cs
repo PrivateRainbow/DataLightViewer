@@ -8,17 +8,18 @@ using Loader.Types;
 
 namespace Loader.Services.Builders
 {
-    public sealed class BulkDbNodeBuilder : BaseDbNodeBuilder
+    public class BulkDbNodeBuilder : BaseDbNodeBuilder
     {
-        public BulkDbNodeBuilder() {}
+        public BulkDbNodeBuilder() { }
         public BulkDbNodeBuilder(string connectionString) : base(connectionString) { }
 
-        #region Implementation
+        #region Overriden
+
         protected override List<Node> MakeDatabases()
         {
-            using (SqlConnection)
+            using (sqlConnection)
             {
-                SqlConnection.Open();
+                sqlConnection.Open();
 
                 var database = new Node(DbSchemaConstants.Database);
                 var tables = new Node(DbSchemaConstants.Tables);
@@ -33,129 +34,123 @@ namespace Loader.Services.Builders
                 database.Add(views);
                 database.Add(procedures);
 
-                return new List<Node> {database};
+                return new List<Node> { database };
             }
         }
+
         protected override List<Node> MakeTables()
         {
-            var reader = SqlCommandHelper.MakeCommand(SqlQueries.GetQueryForTable()).ExecuteReader();
+            var reader = sqlCommandHelper.MakeCommand(SqlQueries.GetQueryForTables()).ExecuteReader();
             var tables = MakeNodeCollection(DbSchemaConstants.Table, reader);
 
             foreach (var t in tables)
             {
-                var id = t.Attributes[SqlQueryConstants.ObjectIdLiteral];
-
-                var columns = new Node(DbSchemaConstants.Columns);
-                var keys = new Node(DbSchemaConstants.Keys);
-                var constraints = new Node(DbSchemaConstants.Constraints);
-                var indexes = new Node(DbSchemaConstants.Indexes);
-
-                columns.Children.AddRange(MakeColumns(id));
-                keys.Children.AddRange(MakeKeys(id));
-                constraints.Children.AddRange(MakeConstraints(id));
-                indexes.Children.AddRange(MakeIndexes(id));
-
-                var subNodes = new[] { columns, keys, constraints, indexes };
-                t.Children.AddRange(subNodes);
+                var bundle = MakeBundleForTable(t.GetNavigationContext(NavigationType.Self));
+                bundle.ForEach(b => t.Add(b));
             }
 
             return tables;
         }
+
         protected override List<Node> MakeViews()
         {
-            var reader = SqlCommandHelper.MakeCommand(SqlQueries.GetQueryForView()).ExecuteReader();
+            var reader = sqlCommandHelper.MakeCommand(SqlQueries.GetQueryForViews()).ExecuteReader();
             var views = MakeNodeCollection(DbSchemaConstants.View, reader);
 
             foreach (var v in views)
             {
-                var id = v.Attributes[SqlQueryConstants.ObjectIdLiteral];
-                var columns = new Node(DbSchemaConstants.Columns);
-                var indexes = new Node(DbSchemaConstants.Indexes);
-
-                columns.Children.AddRange(MakeColumns(id));
-                indexes.Children.AddRange(MakeIndexes(id));
-
-                var subNodes = new[] { columns, indexes };
-                v.Children.AddRange(subNodes);
+                var bundle = MakeBundleForView(v.GetNavigationContext(NavigationType.Self));
+                bundle.ForEach(b => v.Add(b));
             }
 
             return views;
         }
+
         protected override List<Node> MakeProcedures()
         {
-            var reader = SqlCommandHelper.MakeCommand(SqlQueries.GetQueryForProcedure()).ExecuteReader();
+            var reader = sqlCommandHelper.MakeCommand(SqlQueries.GetQueryForProcedures()).ExecuteReader();
             var procedures = MakeNodeCollection(DbSchemaConstants.Procedure, reader);
 
             foreach (var p in procedures)
             {
-                var id = p.Attributes[SqlQueryConstants.ObjectIdLiteral];
-                var parameters = new Node(DbSchemaConstants.ProcParameters);
-
-                parameters.Children.AddRange(MakeProcParams(id));
-
-                p.Add(parameters);
+                var bundle = MakeBundleForProcedure(p.GetNavigationContext(NavigationType.Self));
+                bundle.ForEach(b => p.Add(b));
             }
 
             return procedures;
         }
-        protected override List<Node> MakeColumns(string objectId)
+
+        protected override List<Node> MakeBundleForDatabase()
         {
-            return MakeNodeCollection(DbSchemaConstants.Column,
-                SqlCommandHelper.MakeCommandWithParam(SqlQueries.GetQueryForColumn(), objectId).ExecuteReader());
+            var tablesHeader = new Node(DbSchemaConstants.Tables);
+            var viewsHeader = new Node(DbSchemaConstants.Views);
+            var proceduresHeader = new Node(DbSchemaConstants.Procedures);
+
+            var tables = MakeTables();
+            var views = MakeViews();
+            var procedures = MakeProcedures();
+
+            tables.ForEach(t => tablesHeader.Add(t));
+            views.ForEach(t => viewsHeader.Add(t));
+            procedures.ForEach(t => proceduresHeader.Add(t));
+
+            var bunch = new List<Node> { tablesHeader, viewsHeader, proceduresHeader };
+            return bunch;
         }
-        protected override List<Node> MakeKeys(string objectId)
-        {
-            var collection = new List<Node>();
 
-            var primaryKeys = MakeNodeCollection(DbSchemaConstants.Key,
-                SqlCommandHelper.MakeCommandWithParam(SqlQueries.GetQueryForPrimaryKey(), objectId).ExecuteReader());
+        #endregion
 
-            var foreignKeys = MakeNodeCollection(DbSchemaConstants.Key,
-                SqlCommandHelper.MakeCommandWithParam(SqlQueries.GetQueryForForeignKey(), objectId).ExecuteReader());
-
-            collection.AddRange(primaryKeys);
-            collection.AddRange(foreignKeys);
-
-            return collection;
-        }
-        protected override List<Node> MakeConstraints(string objectId)
-        {
-            var collection = new List<Node>();
-
-            var defaultConstraints = MakeNodeCollection(DbSchemaConstants.Constraint,
-                SqlCommandHelper.MakeCommandWithParam(SqlQueries.GetQueryForDefaultConstraint(), objectId).ExecuteReader());
-
-            var checkedConstraints = MakeNodeCollection(DbSchemaConstants.Constraint,
-                SqlCommandHelper.MakeCommandWithParam(SqlQueries.GetQueryForCheckedConstraint(), objectId).ExecuteReader());
-
-            var uniqueConstraints = MakeNodeCollection(DbSchemaConstants.Constraint,
-                SqlCommandHelper.MakeCommandWithParam(SqlQueries.GetQueryForUniqueConstraint(), objectId).ExecuteReader());
-
-            collection.AddRange(defaultConstraints);
-            collection.AddRange(checkedConstraints);
-            collection.AddRange(uniqueConstraints);
-
-            return collection;
-        }
-        protected override List<Node> MakeIndexes(string objectId)
-        {
-            return MakeNodeCollection(DbSchemaConstants.Index,
-                SqlCommandHelper.MakeCommandWithParam(SqlQueries.GetQueryForIndex(), objectId).ExecuteReader());
-        }
-        protected override List<Node> MakeProcParams(string objectId)
-        {
-            return MakeNodeCollection(DbSchemaConstants.ProcParameter,
-                SqlCommandHelper.MakeCommandWithParam(SqlQueries.GetQueryForProcParameter(), objectId).ExecuteReader());
-        }
+        #region Implementation
 
         public override List<Node> MakeNode(BuildContext context)
         {
+            var node = context.Node;
             var type = context.Node.ResolveDbNodeType();
 
-            if (type != DbSchemaObjectType.Database)
-                throw new ArgumentException($" Such {type} was not expected! Use DbSchemaObjectType.Database .");
+            SetConnection(context.Connection);
 
-            return MakeDatabases();
+
+            switch (type)
+            {
+                case DbSchemaObjectType.Database:
+                    return LazyDataFetchingHandler(MakeBundleForDatabase);
+
+                case DbSchemaObjectType.Tables:
+                    return LazyDataFetchingHandler(MakeTables);
+
+                case DbSchemaObjectType.Views:
+                    return LazyDataFetchingHandler(MakeViews);
+
+                case DbSchemaObjectType.Procedures:
+                    return LazyDataFetchingHandler(MakeProcedures);
+
+
+                case DbSchemaObjectType.Columns:
+                    return LazyDataFetchingHandler(base.MakeColumns, node.GetNavigationContext(NavigationType.FromParent));
+
+                case DbSchemaObjectType.Keys:
+                    return LazyDataFetchingHandler(base.MakeKeys, node.GetNavigationContext(NavigationType.FromParent));
+
+                case DbSchemaObjectType.Constraints:
+                    return LazyDataFetchingHandler(base.MakeConstraints, node.GetNavigationContext(NavigationType.FromParent));
+
+                case DbSchemaObjectType.Indexes:
+                    return LazyDataFetchingHandler(base.MakeIndexes, node.GetNavigationContext(NavigationType.FromParent));
+
+
+                case DbSchemaObjectType.Table:
+                    return LazyDataFetchingHandler(MakeBundleForTable, node.GetNavigationContext(NavigationType.Self));
+
+                case DbSchemaObjectType.View:
+                    return LazyDataFetchingHandler(MakeBundleForView, node.GetNavigationContext(NavigationType.Self));
+
+                case DbSchemaObjectType.Procedure:
+                    return LazyDataFetchingHandler(MakeBundleForProcedure, node.GetNavigationContext(NavigationType.Self));
+
+                default:
+                    throw new ArgumentException($"{nameof(type)}");
+            }
+
         }
 
         #endregion

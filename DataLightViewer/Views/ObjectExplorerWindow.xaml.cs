@@ -1,6 +1,8 @@
 ﻿using DataLightViewer.Helpers;
 using DataLightViewer.ViewModels;
+using System;
 using System.Windows;
+using System.ComponentModel;
 
 namespace DataLightViewer.Views
 {
@@ -9,19 +11,34 @@ namespace DataLightViewer.Views
     /// </summary>
     public partial class ObjectExplorerWindow : Window
     {
-        public ObjectExplorerWindow()
+        private readonly ExplorerViewModel _explorerVm;
+
+        public ObjectExplorerWindow(ExplorerViewModel explorer)
         {
-            var vm = new ExplorerViewModel(this);
-            vm.ValidationCheckMessage += ValidationCheckHandler;
+            _explorerVm = explorer;
+            _explorerVm.ValidationCheckMessage += ValidationCheckHandler;
+            _explorerVm.UpdatePasswordMessage += UpdatePasswordHandler;
+            _explorerVm.ConnectionEstablished += ConnectionEstablishedHandler;
 
-            DataContext = vm;
-
+            DataContext = _explorerVm;            
             InitializeComponent();
         }
 
-        private void ValidationCheckHandler(object sender, System.EventArgs e)
+        private void ConnectionEstablishedHandler(object sender, EventArgs e) => this.Close();
+        private void ValidationCheckHandler(object sender, System.EventArgs e) => passwordField.GetBindingExpression(PasswordBoxAssistant.BoundPassword).UpdateSource();
+        private void UpdatePasswordHandler(object sender, System.EventArgs e)
         {
-            passwordField.GetBindingExpression(PasswordBoxAssistant.BoundPassword).UpdateSource();
+            passwordField.Password = string.Empty;
+            passwordField.GetBindingExpression(PasswordBoxAssistant.BoundPassword).UpdateTarget();
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            _explorerVm.ValidationCheckMessage -= ValidationCheckHandler;
+            _explorerVm.UpdatePasswordMessage -= UpdatePasswordHandler;
+            _explorerVm.ConnectionEstablished -= ConnectionEstablishedHandler;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace DataLightViewer.Filters
     {        
         private static readonly Dictionary<SearchFilterType, SearchFilter> _filters = new Dictionary<SearchFilterType, SearchFilter>
         {
-            {SearchFilterType.ByName, SearchByName }
+            {SearchFilterType.ByName, SearchByContent }
         };
 
         public static SearchFilter GetFilterBySearchType(SearchFilterType type) => _filters[type];
@@ -25,6 +25,7 @@ namespace DataLightViewer.Filters
         #region Filters
 
         private static bool SearchByName(NodeViewModel source, string pattern) => source.Name.IndexOf(pattern, StringComparison.InvariantCultureIgnoreCase) > -1;
+        private static bool SearchByContent(NodeViewModel source, string pattern) => source.Content.IndexOf(pattern, StringComparison.InvariantCultureIgnoreCase) > -1;
 
         #endregion       
     }
